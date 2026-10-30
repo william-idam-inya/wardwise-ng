@@ -25,7 +25,6 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(listClinicalCases).mockResolvedValue([]);
   vi.mocked(archiveClinicalCase).mockResolvedValue(undefined);
-  vi.mocked(deleteClinicalCase).mockResolvedValue(undefined);
   vi.stubGlobal('confirm', vi.fn(() => true));
 });
 

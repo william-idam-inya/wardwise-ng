@@ -24,6 +24,10 @@ comment on table public.profiles is
 comment on column public.profiles.age_years is
   'Optional age in whole years. Date of birth is deliberately not collected in this milestone.';
 
+-- Keep internal trigger functions outside the exposed public API schema.
+create schema if not exists private;
+revoke all on schema private from public, anon, authenticated, service_role;
+
 -- Supabase's 30 October 2026 Data API change requires explicit table grants.
 grant usage on schema public to authenticated;
 -- The authenticated role is the only browser role permitted to access profiles.
@@ -56,7 +60,7 @@ create policy "profiles_delete_own"
 create index if not exists profiles_study_level_idx on public.profiles (study_level);
 
 -- Keep updated_at controlled by Postgres rather than trusting browser input.
-create or replace function public.set_profiles_updated_at()
+create or replace function private.set_profiles_updated_at()
 returns trigger
 language plpgsql
 set search_path = ''
@@ -67,9 +71,9 @@ begin
 end;
 $$;
 
-revoke all on function public.set_profiles_updated_at() from public, anon, authenticated;
+revoke all on function private.set_profiles_updated_at() from public, anon, authenticated, service_role;
 
 drop trigger if exists profiles_set_updated_at on public.profiles;
 create trigger profiles_set_updated_at
 before update on public.profiles
-for each row execute function public.set_profiles_updated_at();
+for each row execute function private.set_profiles_updated_at();
