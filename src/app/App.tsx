@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 import { AppShell } from '../components/AppShell';
 import { ProcessingIndicator } from '../components/ProcessingIndicator';
@@ -9,6 +9,9 @@ import { AuthProvider, useAuth } from '../features/auth/AuthContext';
 import { ProfileSetup } from '../features/auth/ProfileSetup';
 import { ClerkingWorkspace } from '../features/clerking/ClerkingWorkspace';
 import { createInitialClerkingDraft, type ClerkingDraft } from '../features/clerking/clerking.types';
+import { CaseLibrary } from '../features/case-library/CaseLibrary';
+import { listClinicalCases, loadClinicalCase } from '../features/case-library/case.service';
+import type { ClinicalCaseSummary } from '../features/case-library/case.types';
 import type { SectionId } from './navigation';
 
 type Theme = 'light' | 'dark';
@@ -27,11 +30,30 @@ function AppContent() {
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const [catalogueQuery, setCatalogueQuery] = useState('');
   const [clerkingDraft, setClerkingDraft] = useState<ClerkingDraft>(createInitialClerkingDraft);
+  const [currentCaseId, setCurrentCaseId] = useState<string | null>(null);
+  const [clerkingStage, setClerkingStage] = useState(0);
+  const [recentCases, setRecentCases] = useState<ClinicalCaseSummary[] | null>(null);
   const [accountError, setAccountError] = useState('');
+
+  const refreshCases = useCallback(async () => {
+    const userId = auth.user?.id;
+    if (!userId) { setRecentCases(null); return; }
+    try {
+      setRecentCases(await listClinicalCases(userId));
+    } catch (error) {
+      setRecentCases(null);
+      setAccountError(error instanceof Error ? error.message : 'We could not load recent cases.');
+    }
+  }, [auth.user?.id]);
 
   useEffect(() => {
     setClerkingDraft(createInitialClerkingDraft());
-  }, [auth.user?.id]);
+    setCurrentCaseId(null);
+    setClerkingStage(0);
+    setRecentCases(null);
+    setAccountError('');
+    void refreshCases();
+  }, [auth.user?.id, refreshCases]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -44,11 +66,38 @@ function AppContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const startNewCase = () => {
+    setClerkingDraft(createInitialClerkingDraft());
+    setCurrentCaseId(null);
+    setClerkingStage(0);
+    navigate('clerking');
+  };
+
+  const handleCaseSaved = (caseId: string) => {
+    setCurrentCaseId(caseId);
+    void refreshCases();
+  };
+
+  const openCase = async (caseId: string) => {
+    const userId = auth.user?.id;
+    if (!userId) return;
+    setAccountError('');
+    try {
+      const loaded = await loadClinicalCase(caseId, userId);
+      setClerkingDraft(loaded.draft);
+      setCurrentCaseId(loaded.clinicalCase.id);
+      setClerkingStage(loaded.currentStage);
+      navigate('clerking');
+    } catch (error) {
+      setAccountError(error instanceof Error ? error.message : 'We could not open that case.');
+    }
+  };
+
   if (!auth.configured) return <AuthPage />;
   if (auth.loading) return <main className="auth-screen"><ProcessingIndicator label="Restoring your sign-in session" detail="Checking your WardWise account." /></main>;
-  if (!auth.session) return <AuthPage />;
+  if (!auth.session || !auth.user) return <AuthPage />;
   if (auth.recoveryRequired) return <AuthPage />;
-  if (auth.profileLoading) return <main className="auth-screen"><ProcessingIndicator label="Loading your student profile" detail="Checking your private account record." /></main>;
+  if (auth.profileLoading || (auth.user && auth.profile && auth.profile.id !== auth.user.id)) return <main className="auth-screen"><ProcessingIndicator label="Loading your student profile" detail="Checking your private account record." /></main>;
 
   if (auth.profileError) {
     return <main className="auth-screen"><section className="auth-card setup-card">
@@ -80,10 +129,12 @@ function AppContent() {
     }}
   >
     {section === 'workspace'
-      ? <Workspace onNavigate={(next) => navigate(next)} />
+      ? <Workspace onNavigate={(next) => next === 'clerking' ? startNewCase() : navigate(next)} recentCases={recentCases} onOpenCase={openCase} />
       : section === 'clerking'
-        ? <ClerkingWorkspace draft={clerkingDraft} onDraftChange={setClerkingDraft} onNavigate={navigate} onStartNew={() => setClerkingDraft(createInitialClerkingDraft())} />
-        : <SectionPage
+        ? <ClerkingWorkspace draft={clerkingDraft} onDraftChange={setClerkingDraft} onNavigate={navigate} onStartNew={startNewCase} userId={auth.user.id} currentCaseId={currentCaseId} onCaseSaved={handleCaseSaved} currentStage={clerkingStage} onCurrentStageChange={setClerkingStage} />
+        : section === 'case-library'
+          ? <CaseLibrary userId={auth.user.id} onOpenCase={openCase} onStartNew={startNewCase} />
+          : <SectionPage
           key={section === 'learning-catalogue' ? section + '-' + catalogueQuery : section}
           section={section}
           onNavigate={(next) => navigate(next)}

@@ -1,6 +1,6 @@
 -- WardWise NG — Milestone 1: private student profiles.
--- Apply only to the NEW WardWise NG Supabase project.
--- Never apply this migration to the existing ClinClerk NG database.
+-- This migration is for a NEW WardWise NG Supabase project only.
+-- Do not apply it to the existing ClinClerk NG database.
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
@@ -25,8 +25,9 @@ comment on column public.profiles.age_years is
   'Optional age in whole years. Date of birth is deliberately not collected in this milestone.';
 
 -- Supabase's 30 October 2026 Data API change requires explicit table grants.
--- Neither anon nor service_role needs direct access to this browser-owned profile table.
-revoke all on table public.profiles from anon, authenticated, service_role;
+grant usage on schema public to authenticated;
+-- The authenticated role is the only browser role permitted to access profiles.
+revoke all on table public.profiles from anon, authenticated;
 grant select, insert, update, delete on table public.profiles to authenticated;
 
 alter table public.profiles enable row level security;
@@ -54,11 +55,8 @@ create policy "profiles_delete_own"
 
 create index if not exists profiles_study_level_idx on public.profiles (study_level);
 
--- Keep the trigger function in a non-exposed schema; clients cannot invoke it as an RPC.
-create schema if not exists private;
-revoke all on schema private from public, anon, authenticated;
-
-create or replace function private.set_profiles_updated_at()
+-- Keep updated_at controlled by Postgres rather than trusting browser input.
+create or replace function public.set_profiles_updated_at()
 returns trigger
 language plpgsql
 set search_path = ''
@@ -69,9 +67,9 @@ begin
 end;
 $$;
 
-revoke all on function private.set_profiles_updated_at() from public, anon, authenticated;
+revoke all on function public.set_profiles_updated_at() from public, anon, authenticated;
 
 drop trigger if exists profiles_set_updated_at on public.profiles;
 create trigger profiles_set_updated_at
 before update on public.profiles
-for each row execute function private.set_profiles_updated_at();
+for each row execute function public.set_profiles_updated_at();

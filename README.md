@@ -15,7 +15,9 @@ WardWise NG is an educational platform for medical and surgery students, especia
 ## Current delivery status
 - **Milestone 0 — Foundation:** app shell, responsive navigation, Workspace, light/dark theme, starter catalogue, accessible status indicator and initial tests.
 - **Milestone 1 — Auth/profile implementation:** Supabase client, email/password registration and sign-in, password reset/recovery, profile setup/editing, profile fetch, a profiles SQL migration, and owner-based row-level security are implemented in code.
-- **Backend connection:** not yet complete. The connected Supabase account currently has the existing clinclerk-ng project only. WardWise must use a new, separate Supabase project. The migration has not been applied and live auth/database tests have not yet run.
+- **Milestone 3 — Guided clerking:** a 13-stage form covers separate complaint histories, ROS, past/family/social history, examination, investigations, assessment, plan and note review. The draft records whether each ROS system was actually reviewed and does not transform unanswered items into negatives.
+- **Milestone 4 — Case Library:** private case and session tables, RLS migrations, save/reopen/edit/archive/delete services, and recent-case shortcuts are implemented in code.
+- **Backend connection:** not yet complete. The connected Supabase account currently has the existing clinclerk-ng project only. WardWise must use a new, separate Supabase project. The migrations have not been applied and live auth/database tests have not yet run.
 - The app keeps the private workspace locked when Supabase public configuration is missing. It does not silently fall back to demo/private data.
 
 ## Technology
@@ -42,11 +44,11 @@ Never put a Gemini key, Supabase service-role key or Supabase secret key in a VI
 Run npm run lint, npm run typecheck, npm test and npm run build. CI runs these on pushes and pull requests. Do not treat a configured workflow as proof of passing tests; inspect the actual workflow run.
 
 ## Database boundary and security
-Use a NEW Supabase project for WardWise NG. Do not reuse, reset, pause or delete the existing ClinClerk NG project. Initial migration: supabase/migrations/20261030000000_create_profiles.sql
+Use a NEW Supabase project for WardWise NG. Do not reuse, reset, pause or delete the existing ClinClerk NG project. Initial migration: supabase/migrations/20261030000000_create_profiles.sql and supabase/migrations/20261030010000_create_clinical_cases.sql
 
 The profile table has RLS policies for select/insert/update/delete so each signed-in user can access only the row whose id equals auth.uid(). Explicit table grants accompany RLS because Supabase's Data API no longer exposes newly-created public tables by default from 30 October 2026. Do not remove those grants/policies without reviewing the access model.
 
-The current profile stores name, optional sex, optional age in years, study level, institution and optional training site. It deliberately does not collect a date of birth. Further user-specific tables need their own explicit grants, RLS policies, indices and two-user isolation tests.
+The current profile stores name, optional sex, optional age in years, study level, institution and optional training site. It deliberately does not collect a date of birth. Clinical cases and clerking sessions use owner IDs, explicit grants, RLS policies, indices and a composite owner-bound foreign key. See the second migration and docs/supabase-setup.md. Two-user isolation remains unverified until a WardWise project is available.
 
 ## Clinical and privacy rules
 1. Use synthetic or properly de-identified cases only. Do not enter patient names, phone numbers, hospital numbers, addresses, identifiable photos/scans or other identifiers without formal authorisation and an approved lawful basis.
@@ -61,8 +63,8 @@ The current profile stores name, optional sex, optional age in years, study leve
 - [x] Milestone 0 — app foundation and navigation
 - [ ] Milestone 1 — authentication/profile code and initial RLS migration (remote setup and verification pending)
 - [ ] Milestone 2 — data-backed Workspace
-- [ ] Milestone 3 — complete AI guided clerking, clinical validation and live note preview (structured workflow foundation committed; Gemini and verification pending)
-- [ ] Milestone 4 — case persistence, edit/reopen/delete and export
+- [ ] Milestone 3 — AI follow-up questions, clinical validation and live note preview (13-stage structured workflow committed; Gemini and clinical review pending)
+- [x] Milestone 4 — case persistence code, edit/reopen/archive/delete (remote RLS tests and export pending)
 - [ ] Milestone 5 — secure Gemini Edge Function and structured response validation
 - [ ] Milestone 6 — Clinical Tutor and expanded catalogue
 - [ ] Milestone 7 — virtual patient and examiner rubric

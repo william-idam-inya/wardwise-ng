@@ -1,4 +1,5 @@
 export type SexAtPresentation = 'female' | 'male' | 'intersex' | 'not_recorded';
+export type CaseCategory = 'synthetic' | 'deidentified';
 export type RosStatus = 'Positive' | 'Negative' | 'Not elicited' | 'Not applicable';
 
 export type PresentingComplaint = {
@@ -26,6 +27,7 @@ export type Investigation = {
 
 export type ClerkingDraft = {
   caseLabel: string;
+  caseCategory: CaseCategory;
   specialty: string;
   setting: string;
   biodata: {
@@ -119,6 +121,7 @@ export function createEmptyComplaint(): PresentingComplaint {
 export function createInitialClerkingDraft(): ClerkingDraft {
   return {
     caseLabel: '',
+    caseCategory: 'synthetic',
     specialty: 'General',
     setting: 'Teaching hospital',
     biodata: { age: '', sex: 'not_recorded', occupation: '', residenceContext: '', source: '', reliability: '' },

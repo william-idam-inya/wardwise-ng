@@ -36,7 +36,7 @@ Do not manually apply this migration to clinclerk-ng.
 
 ## 3. Data API exposure requirement (effective 30 October 2026)
 
-Supabase no longer automatically grants Data API access to newly-created public tables. The migration therefore contains explicit least-privilege grants for the profile table. A missing grant causes a 42501 permission denied for table response before RLS runs.
+Supabase no longer automatically grants Data API access to newly-created public tables. The migrations therefore contain explicit least-privilege grants for the profile, clinical-case and clerking-session tables. A missing grant causes a 42501 permission denied for table response before RLS runs.
 
 Do not fix a permission error by granting everything to anon. Check the actual request role and required operation, then update the migration only if the app's access model requires it.
 
@@ -79,3 +79,27 @@ Do not mark user-data isolation as verified until these tests pass against the a
 ## 7. Known current boundary
 
 No WardWise Supabase project has been created or migrated yet. The existing clinclerk-ng project is intentionally untouched. Once a separate project exists, configure its URL/key locally, apply the migration, then verify email registration, sign-in, profile save/edit and two-user RLS isolation before enabling private case storage.
+
+## 8. Create private clinical cases and clerking sessions
+
+The second migration is:
+
+`supabase/migrations/20261030010000_create_clinical_cases.sql`
+
+Apply it after the profile migration, in filename order. It creates:
+- `clinical_cases`: owner, non-identifying label, specialty, setting, draft/archive status, synthetic/de-identified category, structured JSON and formatted note.
+- `clerking_sessions`: owner-bound current stage and answers, linked to `clinical_cases` by a composite foreign key on `(case_id, user_id)`.
+
+Both tables have explicit authenticated grants and separate owner-only RLS policies for select, insert, update and delete. The composite foreign key prevents a session from being attached to another user's case. Delete cascades from a case to its session. The browser does not receive service-role privileges.
+
+After both migrations, test with two authenticated accounts:
+1. Create a case and a clerking session as account A.
+2. Reopen and edit the case as A; confirm the stage and all answers are restored.
+3. As B, try to read, update and delete A's case ID and session; no operation may expose or alter A's rows.
+4. Archive a case as A, then delete it and verify its session is removed.
+5. Confirm an anonymous request cannot read or change either table.
+6. Confirm the case list is scoped to the current user and no identifiers are entered.
+
+The app saves the case row and the session row as two API writes. If the second write fails after the case row succeeds, the UI reports a partial save and retains the case ID so the user can retry the session save. A successful database save is not clinical validation or supervisor sign-off.
+
+Exports and automatic Gemini interpretation are not part of this persistence increment. The app must not send the structured case to an AI service until the server-side authenticated Gemini function is implemented and the learner explicitly requests that operation.

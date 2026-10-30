@@ -70,7 +70,7 @@ export function formatClerkingNote(draft: ClerkingDraft): string {
   ].join('\n');
 
   return [
-    'PATIENT CLERKING NOTE — SYNTHETIC / DE-IDENTIFIED CASE',
+    'PATIENT CLERKING NOTE — ' + (draft.caseCategory === 'synthetic' ? 'SYNTHETIC CASE' : 'DE-IDENTIFIED CASE'),
     'Case label: ' + field(draft.caseLabel),
     'Specialty: ' + field(draft.specialty),
     'Clinical setting: ' + field(draft.setting),

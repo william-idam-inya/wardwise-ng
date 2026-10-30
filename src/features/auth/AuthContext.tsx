@@ -71,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return () => { active = false; };
     }
 
+    setProfile(null);
     setProfileLoading(true);
     setProfileError(null);
     void getStudentProfile(userId)

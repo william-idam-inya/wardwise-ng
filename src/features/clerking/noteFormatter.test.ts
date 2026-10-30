@@ -10,7 +10,7 @@ describe('clerking note formatter', () => {
     expect(note).toContain('REVIEW OF SYSTEMS');
     expect(note).toContain('Not elicited: General / constitutional');
     expect(note).not.toContain('Negative: General / constitutional');
-    expect(note).toContain('PATIENT CLERKING NOTE — SYNTHETIC / DE-IDENTIFIED CASE');
+    expect(note).toContain('PATIENT CLERKING NOTE — SYNTHETIC CASE');
   });
 
   it('formats the history framework separately for each presenting complaint', () => {

@@ -1,10 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, Clipboard, FilePlus2, Plus, ShieldCheck, Trash2 } from 'lucide-react';
 import type { SectionId } from '../../app/navigation';
 import { formatClerkingNote } from './noteFormatter';
+import { ProcessingIndicator } from '../../components/ProcessingIndicator';
+import { saveClerkingDraft, PartialCaseSaveError } from '../case-library/case.service';
 import {
   createEmptyComplaint,
   createId,
+  type CaseCategory,
   type ClerkingDraft,
   type Investigation,
   type PresentingComplaint,
@@ -17,7 +20,12 @@ type Props = {
   onDraftChange: (draft: ClerkingDraft) => void;
   onNavigate: (section: SectionId) => void;
   onStartNew: () => void;
-};
+  userId: string;
+  currentCaseId: string | null;
+  onCaseSaved: (caseId: string) => void;
+  currentStage: number;
+  onCurrentStageChange: (stage: number) => void;
+}
 
 const steps = [
   { title: 'Case setup', detail: 'Specialty and setting' },
@@ -78,15 +86,19 @@ function SelectField({ label, value, onChange, options }: {
   return <label className="clerking-field"><span>{label}</span><select value={value} onChange={(event) => onChange(event.target.value)}>{options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>;
 }
 
-export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew }: Props) {
-  const [activeStep, setActiveStep] = useState(0);
+export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew, userId, currentCaseId, onCaseSaved, currentStage, onCurrentStageChange }: Props) {
   const [activeComplaintId, setActiveComplaintId] = useState(draft.complaints[0]?.id ?? '');
   const [copyStatus, setCopyStatus] = useState('');
   const [noteReviewed, setNoteReviewed] = useState(false);
+  const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveMessage, setSaveMessage] = useState('');
+  const [activeStep, setActiveStepState] = useState(currentStage);
+  useEffect(() => { setActiveStepState(currentStage); }, [currentStage]);
+  const setActiveStep = (stage: number) => { setActiveStepState(stage); onCurrentStageChange(stage); };
   const note = useMemo(() => formatClerkingNote(draft), [draft]);
   const activeComplaint = draft.complaints.find((complaint) => complaint.id === activeComplaintId) ?? draft.complaints[0];
 
-  const applyDraft = (nextDraft: ClerkingDraft) => { onDraftChange(nextDraft); setNoteReviewed(false); };
+  const applyDraft = (nextDraft: ClerkingDraft) => { onDraftChange(nextDraft); setNoteReviewed(false); setSaveState('idle'); setSaveMessage(''); };
 
   const completion = [
     Boolean(draft.caseLabel.trim() && draft.specialty.trim() && draft.setting.trim()),
@@ -155,6 +167,26 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
     applyDraft({ ...draft, investigations: draft.investigations.filter((item) => item.id !== id) });
   };
 
+  async function saveDraft() {
+    if (draft.caseLabel.trim().length < 2) {
+      setSaveState('error');
+      setSaveMessage('Use a non-identifying case label containing at least two characters.');
+      return;
+    }
+    setSaveState('saving');
+    setSaveMessage('');
+    try {
+      const saved = await saveClerkingDraft({ userId, caseId: currentCaseId, draft, currentStage: activeStep });
+      onCaseSaved(saved.id);
+      setSaveState('saved');
+      setSaveMessage('Case and current clerking stage saved to your WardWise account.');
+    } catch (error) {
+      if (error instanceof PartialCaseSaveError) onCaseSaved(error.caseId);
+      setSaveState('error');
+      setSaveMessage(error instanceof Error ? error.message : 'The case could not be saved. Your current entries remain in this session.');
+    }
+  }
+
   async function copyNote() {
     setCopyStatus('');
     try {
@@ -170,6 +202,8 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
       onStartNew();
       setActiveStep(0);
       setCopyStatus('');
+      setSaveState('idle');
+      setSaveMessage('');
       setNoteReviewed(false);
     }
   }
@@ -184,14 +218,17 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
         <div className="eyebrow"><span/> GUIDED CLINICAL HISTORY</div>
         <h1>AI Guided Clinical Clerking</h1>
         <p>Build a coherent clinical history one stage at a time. Each presenting complaint has its own history, followed by a separate review of systems, examination and assessment.</p>
-        <div className="clerking-notice"><ShieldCheck size={17}/><span>Use synthetic or properly de-identified cases only. This draft is held in memory for this app session and is not saved to a database.</span></div>
+        <div className="clerking-notice"><ShieldCheck size={17}/><span>Use synthetic or properly de-identified cases only. Unsaved changes are held in memory; choose Save draft to write this case to your private WardWise account.</span></div>
       </div>
       <div className="clerking-intro-actions">
         <button type="button" className="btn btn-secondary btn-small" onClick={resetDraft}><FilePlus2 size={15}/> New draft</button>
+        <button type="button" className="btn btn-primary btn-small" onClick={()=>void saveDraft()} disabled={saveState==='saving' || !draft.caseLabel.trim()}><Clipboard size={14}/>{saveState==='saving'?'Saving…':'Save draft'}</button>
       </div>
     </section>
 
-    <div className="clerking-ai-status"><span className="ai-status-dot"/> <div><b>Structured guided workflow active</b><small>Gemini-generated follow-up questions and cloud saving will be connected in later milestones.</small></div></div>
+    {saveState==='saving' ? <ProcessingIndicator label="Saving clinical case" detail="Saving the case and clerking stage to your private account."/> : null}
+    {saveMessage ? <p className={saveState==='error'?'auth-error':'auth-banner'} role="status">{saveMessage}</p> : null}
+    <div className="clerking-ai-status"><span className="ai-status-dot"/> <div><b>Structured guided workflow active</b><small>Gemini-generated follow-up questions are not connected yet. Case saving requires the WardWise database migrations to be applied.</small></div></div>
 
     <div className="clerking-layout">
       <aside className="clerking-step-panel" aria-label="Clerking stages">
@@ -210,6 +247,7 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
         <div className="clerking-form-area">
           {activeStep === 0 ? <div className="clerking-form-grid">
             <div className="clerking-stage-prompt"><b>What case are you clerking?</b><p>Use a short, non-identifying case label. Do not enter a patient's name, hospital number, phone number or address.</p></div>
+            <SelectField label="Case type" value={draft.caseCategory} onChange={(value)=>applyDraft({ ...draft, caseCategory: value as CaseCategory })} options={[{value:'synthetic',label:'Synthetic case'},{value:'deidentified',label:'De-identified case'}]}/>
             <TextInput label="Case label (non-identifying)" value={draft.caseLabel} onChange={(value) => applyDraft({ ...draft, caseLabel: value })} placeholder="e.g. Child with recurrent urinary symptoms"/>
             <SelectField label="Specialty" value={draft.specialty} onChange={(value) => applyDraft({ ...draft, specialty: value })} options={specialties.map((value) => ({ value, label: value }))}/>
             <SelectField label="Clinical setting" value={draft.setting} onChange={(value) => applyDraft({ ...draft, setting: value })} options={['Teaching hospital', 'General hospital', 'Primary care', 'Emergency department', 'Outpatient clinic', 'Ward', 'Other'].map((value) => ({ value, label: value }))}/>
