@@ -45,7 +45,7 @@ describe('private case library', () => {
     expect(await screen.findByRole('heading', { name: /your case library is empty/i })).toBeInTheDocument();
   });
 
-  it('archives a case using the authenticated user's case action', async () => {
+  it("archives a case using the authenticated user's case action", async () => {
     vi.mocked(listClinicalCases)
       .mockResolvedValueOnce([exampleCase])
       .mockResolvedValueOnce([{ ...exampleCase, status: 'archived' }]);

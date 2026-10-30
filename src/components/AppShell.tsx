@@ -1,5 +1,5 @@
 import { useState, type ReactNode, type FormEvent } from 'react';
-import { Activity, Bell, ChevronDown, Command, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Search, Settings2, ShieldCheck, Sun } from 'lucide-react';
+import { Activity, Bell, ChevronDown, Command, LogOut, Menu, Moon, PanelLeftClose, PanelLeftOpen, Search, ShieldCheck, Sun } from 'lucide-react';
 import { navigationItems, type SectionId } from '../app/navigation';
 
 type Props = {
