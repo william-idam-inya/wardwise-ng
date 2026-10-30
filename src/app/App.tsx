@@ -7,6 +7,8 @@ import { SectionPage } from '../features/SectionPage';
 import { AuthPage } from '../features/auth/AuthPage';
 import { AuthProvider, useAuth } from '../features/auth/AuthContext';
 import { ProfileSetup } from '../features/auth/ProfileSetup';
+import { ClerkingWorkspace } from '../features/clerking/ClerkingWorkspace';
+import { createInitialClerkingDraft, type ClerkingDraft } from '../features/clerking/clerking.types';
 import type { SectionId } from './navigation';
 
 type Theme = 'light' | 'dark';
@@ -24,7 +26,12 @@ function AppContent() {
   const [section, setSection] = useState<SectionId>('workspace');
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const [catalogueQuery, setCatalogueQuery] = useState('');
+  const [clerkingDraft, setClerkingDraft] = useState<ClerkingDraft>(createInitialClerkingDraft);
   const [accountError, setAccountError] = useState('');
+
+  useEffect(() => {
+    setClerkingDraft(createInitialClerkingDraft());
+  }, [auth.user?.id]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -74,7 +81,9 @@ function AppContent() {
   >
     {section === 'workspace'
       ? <Workspace onNavigate={(next) => navigate(next)} />
-      : <SectionPage
+      : section === 'clerking'
+        ? <ClerkingWorkspace draft={clerkingDraft} onDraftChange={setClerkingDraft} onNavigate={navigate} onStartNew={() => setClerkingDraft(createInitialClerkingDraft())} />
+        : <SectionPage
           key={section === 'learning-catalogue' ? section + '-' + catalogueQuery : section}
           section={section}
           onNavigate={(next) => navigate(next)}

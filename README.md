@@ -59,9 +59,9 @@ The current profile stores name, optional sex, optional age in years, study leve
 
 ## Roadmap
 - [x] Milestone 0 — app foundation and navigation
-- [x] Milestone 1 — authentication/profile code and initial RLS migration (remote setup and verification pending)
+- [ ] Milestone 1 — authentication/profile code and initial RLS migration (remote setup and verification pending)
 - [ ] Milestone 2 — data-backed Workspace
-- [ ] Milestone 3 — complete guided clerking and live note preview
+- [ ] Milestone 3 — complete AI guided clerking, clinical validation and live note preview (structured workflow foundation committed; Gemini and verification pending)
 - [ ] Milestone 4 — case persistence, edit/reopen/delete and export
 - [ ] Milestone 5 — secure Gemini Edge Function and structured response validation
 - [ ] Milestone 6 — Clinical Tutor and expanded catalogue

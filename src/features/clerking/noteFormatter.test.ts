@@ -1,0 +1,52 @@
+import { describe, expect, it } from 'vitest';
+import { createInitialClerkingDraft } from './clerking.types';
+import { formatClerkingNote } from './noteFormatter';
+
+describe('clerking note formatter', () => {
+  it('keeps unanswered review-of-systems items as not elicited, not negative', () => {
+    const draft = createInitialClerkingDraft();
+    const note = formatClerkingNote(draft);
+
+    expect(note).toContain('REVIEW OF SYSTEMS');
+    expect(note).toContain('Not elicited: General / constitutional');
+    expect(note).not.toContain('Negative: General / constitutional');
+    expect(note).toContain('PATIENT CLERKING NOTE — SYNTHETIC / DE-IDENTIFIED CASE');
+  });
+
+  it('formats the history framework separately for each presenting complaint', () => {
+    const draft = createInitialClerkingDraft();
+    draft.complaints[0] = {
+      ...draft.complaints[0],
+      symptom: 'Abdominal pain',
+      duration: '2 days',
+      course: 'Gradual onset and progressive',
+      causeContext: 'No known precipitating factor elicited',
+      complications: 'Vomiting reported',
+      careReceived: 'Analgesia received at a clinic',
+    };
+    draft.complaints.push({
+      ...draft.complaints[0],
+      id: 'complaint-second',
+      symptom: 'Fever',
+      duration: '1 day',
+      course: 'Intermittent',
+      causeContext: '',
+      complications: '',
+      careReceived: '',
+    });
+
+    const note = formatClerkingNote(draft);
+    expect(note).toContain('1. Abdominal pain — 2 days');
+    expect(note).toContain('2. Fever — 1 day');
+    expect(note).toContain('Course: Gradual onset and progressive');
+    expect(note).toContain('Course: Intermittent');
+    expect(note).toContain('Cause / context: Not elicited');
+  });
+
+  it('does not fabricate examination or investigation results', () => {
+    const note = formatClerkingNote(createInitialClerkingDraft());
+    expect(note).toContain('Status: Not assessed');
+    expect(note).toContain('No investigation results entered.');
+    expect(note).toContain('Opposing features / uncertainties: Not elicited');
+  });
+});
