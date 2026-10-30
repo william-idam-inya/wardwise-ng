@@ -4,6 +4,7 @@ import type { SectionId } from '../../app/navigation';
 import { formatClerkingNote } from './noteFormatter';
 import { ProcessingIndicator } from '../../components/ProcessingIndicator';
 import { saveClerkingDraft, PartialCaseSaveError } from '../case-library/case.service';
+import { requestNextClerkingQuestion, type ClinicalAssistantResponse } from './clinicalAssistant.service';
 import {
   createEmptyComplaint,
   createId,
@@ -92,13 +93,29 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
   const [noteReviewed, setNoteReviewed] = useState(false);
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [saveMessage, setSaveMessage] = useState('');
+  const [assistantState, setAssistantState] = useState<'idle' | 'waiting' | 'error'>('idle');
+  const [assistantMessage, setAssistantMessage] = useState('');
+  const [assistantResponse, setAssistantResponse] = useState<ClinicalAssistantResponse | null>(null);
   const [activeStep, setActiveStepState] = useState(currentStage);
   useEffect(() => { setActiveStepState(currentStage); }, [currentStage]);
+  useEffect(() => {
+    setAssistantState('idle');
+    setAssistantMessage('');
+    setAssistantResponse(null);
+  }, [activeStep]);
   const setActiveStep = (stage: number) => { setActiveStepState(stage); onCurrentStageChange(stage); };
   const note = useMemo(() => formatClerkingNote(draft), [draft]);
   const activeComplaint = draft.complaints.find((complaint) => complaint.id === activeComplaintId) ?? draft.complaints[0];
 
-  const applyDraft = (nextDraft: ClerkingDraft) => { onDraftChange(nextDraft); setNoteReviewed(false); setSaveState('idle'); setSaveMessage(''); };
+  const applyDraft = (nextDraft: ClerkingDraft) => {
+    onDraftChange(nextDraft);
+    setNoteReviewed(false);
+    setSaveState('idle');
+    setSaveMessage('');
+    setAssistantState('idle');
+    setAssistantMessage('');
+    setAssistantResponse(null);
+  };
 
   const completion = [
     Boolean(draft.caseLabel.trim() && draft.specialty.trim() && draft.setting.trim()),
@@ -167,6 +184,88 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
     applyDraft({ ...draft, investigations: draft.investigations.filter((item) => item.id !== id) });
   };
 
+  function getCurrentStageContext(): Record<string, unknown> {
+    const complaintSummary = draft.complaints.map((item) => ({
+      symptom: item.symptom,
+      duration: item.duration,
+    }));
+
+    switch (activeStep) {
+      case 1:
+        return { biodata: draft.biodata };
+      case 2:
+        return { presentingComplaints: complaintSummary };
+      case 3:
+        return {
+          activeComplaint: activeComplaint ? {
+            symptom: activeComplaint.symptom,
+            duration: activeComplaint.duration,
+            course: activeComplaint.course,
+            causeContext: activeComplaint.causeContext,
+            complications: activeComplaint.complications,
+            careReceived: activeComplaint.careReceived,
+            symptomSpecific: activeComplaint.symptomSpecific,
+          } : null,
+          allComplaints: complaintSummary,
+        };
+      case 4:
+        return {
+          associatedSymptoms: draft.complaints.map((item) => ({
+            symptom: item.symptom,
+            associatedSymptoms: item.associatedSymptoms,
+          })),
+        };
+      case 5:
+        return {
+          reviewOfSystems: draft.ros.map((item) => ({
+            system: item.system,
+            status: item.status,
+            details: item.details,
+            reviewed: item.reviewed,
+          })),
+        };
+      case 6:
+        return { pastHistory: draft.pastHistory };
+      case 7:
+        return { familyAndSocialHistory: draft.familySocial };
+      case 8:
+        return { examination: draft.examination };
+      case 9:
+        return { investigations: draft.investigations };
+      case 10:
+        return { assessment: draft.assessment };
+      case 11:
+        return { educationalPlan: draft.plan };
+      default:
+        return {};
+    }
+  }
+
+  async function askAssistantForNextQuestion() {
+    setAssistantState('waiting');
+    setAssistantMessage('');
+    setAssistantResponse(null);
+    try {
+      const response = await requestNextClerkingQuestion({
+        stage: activeStep,
+        stageTitle: steps[activeStep].title,
+        caseCategory: draft.caseCategory,
+        specialty: draft.specialty,
+        setting: draft.setting,
+        clinicalContext: getCurrentStageContext(),
+      });
+      setAssistantResponse(response);
+      setAssistantState('idle');
+    } catch (error) {
+      setAssistantState('error');
+      setAssistantMessage(
+        error instanceof Error
+          ? error.message
+          : 'The clinical assistant could not complete the request. Your entries remain unchanged.',
+      );
+    }
+  }
+
   async function saveDraft() {
     if (draft.caseLabel.trim().length < 2) {
       setSaveState('error');
@@ -205,11 +304,14 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
       setSaveState('idle');
       setSaveMessage('');
       setNoteReviewed(false);
+      setAssistantState('idle');
+      setAssistantMessage('');
+      setAssistantResponse(null);
     }
   }
 
-  const next = () => setActiveStep((current) => Math.min(steps.length - 1, current + 1));
-  const back = () => setActiveStep((current) => Math.max(0, current - 1));
+  const next = () => setActiveStep(Math.min(steps.length - 1, activeStep + 1));
+  const back = () => setActiveStep(Math.max(0, activeStep - 1));
 
   return <div className="clerking-page page-stack">
     <button className="back-link" type="button" onClick={() => onNavigate('workspace')}><ArrowLeft size={15}/> Back to workspace</button>
@@ -228,7 +330,48 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
 
     {saveState==='saving' ? <ProcessingIndicator label="Saving clinical case" detail="Saving the case and clerking stage to your private account."/> : null}
     {saveMessage ? <p className={saveState==='error'?'auth-error':'auth-banner'} role="status">{saveMessage}</p> : null}
-    <div className="clerking-ai-status"><span className="ai-status-dot"/> <div><b>Structured guided workflow active</b><small>Gemini-generated follow-up questions are not connected yet. Case saving requires the WardWise database migrations to be applied.</small></div></div>
+    <div className="clerking-ai-status">
+      <span className="ai-status-dot" />
+      <div>
+        <b>WardWise clinical assistant</b>
+        <small>Ask for one focused follow-up question for this stage. Check suggestions against the history and your clinical supervisor.</small>
+      </div>
+      {activeStep > 0 && activeStep < 12 ? (
+        <button
+          type="button"
+          className="btn btn-secondary btn-small"
+          onClick={() => void askAssistantForNextQuestion()}
+          disabled={assistantState === 'waiting'}
+        >
+          Ask for next question <ArrowRight size={14} />
+        </button>
+      ) : null}
+    </div>
+    {assistantState === 'waiting' ? (
+      <div className="assistant-response">
+        <ProcessingIndicator label="Waiting for Gemini response" detail="Your stage-specific context is being sent to the authenticated WardWise function." />
+      </div>
+    ) : null}
+    {assistantState === 'error' && assistantMessage ? (
+      <div className="assistant-response assistant-response--error" role="alert">{assistantMessage}</div>
+    ) : null}
+    {assistantResponse ? (
+      <section className="assistant-response" aria-live="polite">
+        <span className="kicker">SUGGESTED NEXT QUESTION</span>
+        <h3>{assistantResponse.assistant_message}</h3>
+        <p><b>Why this matters:</b> {assistantResponse.question_purpose}</p>
+        {assistantResponse.missing_information.length ? (
+          <p><b>Details to clarify:</b> {assistantResponse.missing_information.join(' · ')}</p>
+        ) : null}
+        {assistantResponse.safety_flags.length ? (
+          <div className="assistant-safety-flags">
+            <b>Safety / escalation note</b>
+            {assistantResponse.safety_flags.map((flag, index) => <p key={index}>{flag}</p>)}
+          </div>
+        ) : null}
+        <small>AI-generated educational prompt · {assistantResponse.model} · Verify before use.</small>
+      </section>
+    ) : null}
 
     <div className="clerking-layout">
       <aside className="clerking-step-panel" aria-label="Clerking stages">
