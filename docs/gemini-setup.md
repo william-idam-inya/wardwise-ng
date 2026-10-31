@@ -1,63 +1,64 @@
 # Gemini integration for WardWise NG
 
-This guide applies only to WardWise NG. The existing ClinClerk NG app and project are separate and must not be reused for this integration.
+This guide applies only to WardWise NG. The existing ClinClerk NG app and database are separate and must not be reused for this integration.
+
+## Deployment status
+
+The authenticated Supabase Edge Function `clinical-assistant` is deployed to project `ooutidbssimzvvgkinek` with JWT verification enabled.
+
+Function URL:
+
+`https://ooutidbssimzvvgkinek.supabase.co/functions/v1/clinical-assistant`
+
+The deployed function is not yet AI-ready: the private `GEMINI_API_KEY` and exact permitted frontend origins still need to be configured as Supabase Edge Function secrets. Requests without the Gemini key return a controlled 503 response.
 
 ## Request flow
 
-The browser invokes the authenticated Supabase Edge Function:
-
-- Function: supabase/functions/clinical-assistant/index.ts
-- Browser service: src/features/clerking/clinicalAssistant.service.ts
+- Function source: `supabase/functions/clinical-assistant/index.ts`
+- Browser service: `src/features/clerking/clinicalAssistant.service.ts`
 - UI action: Ask for next question in the current clerking stage.
 
-The Edge Function verifies the user's Supabase JWT, checks the operation and stage, enforces payload-size limits, calls Gemini with only the relevant stage context, validates the model output against a response schema, and returns one focused question. It does not save the clinical context or question to WardWise tables.
+The function verifies the user's Supabase JWT, checks the operation and stage, enforces payload-size limits, calls Gemini with only the relevant stage context, validates model output against a response schema and returns one focused question. It does not save the clinical context or question to WardWise tables.
+
+Supabase injects the project URL and public key set into Edge Function runtime variables. The function does not need a service-role key.
 
 ## Model and API
 
-The current default model is gemini-3.8-flash, configurable using the server-side GEMINI_MODEL secret.
+The current default model is `gemini-3.8-flash`, configurable using the server-side `GEMINI_MODEL` secret.
 
-The function calls Google's Gemini Interactions API using JSON-schema constrained JSON output. It sets store: false to prevent the interaction being stored as an API resource for later retrieval. This setting is not a guarantee of zero provider-side retention; review Google's applicable data-processing terms, retention rules and institutional governance before sending any clinical content.
+The function calls Google's Gemini Interactions API using JSON-schema constrained JSON output. It sets `store: false` to prevent the interaction being stored as an API resource for later retrieval. This is not a guarantee of zero provider-side processing or retention; review Google's current data-processing terms, retention rules and institutional governance before sending any clinical content.
 
-The API version defaults to the stable v1 endpoint via GEMINI_API_VERSION. The beta v1beta endpoint can be selected only if a future feature requires it and has been tested. Change it only after confirming the endpoint and model combination are supported and tested. The function caps output at 500 tokens.
+The API version defaults to stable `v1` via `GEMINI_API_VERSION`. The function caps output at 500 tokens.
 
-## Create and configure secrets
+## Add the private secrets in Supabase Dashboard
 
-After a separate WardWise Supabase project exists, create a local untracked secrets file such as supabase/functions/.env.local (the repository ignores .env.* files):
+1. Open [WardWise Edge Function Secrets](https://supabase.com/dashboard/project/ooutidbssimzvvgkinek/functions/secrets).
+2. Add `GEMINI_API_KEY` and paste the key you generated in Google AI Studio.
+3. Add `APP_ALLOWED_ORIGINS` with the exact origin(s) below. Separate multiple origins with semicolons; do not add URL paths or trailing slashes:
 
-    GEMINI_API_KEY=YOUR_GOOGLE_AI_STUDIO_KEY
-    GEMINI_MODEL=gemini-3.8-flash
-    GEMINI_API_VERSION=v1
-    APP_ALLOWED_ORIGINS=http://localhost:5173;https://YOUR_PUBLIC_APP_ORIGIN
+   `https://wardwise-ng.pages.dev;http://localhost:5173;http://127.0.0.1:5173`
 
-Use your actual permitted app origins. Do not include URL paths or trailing slashes in an origin. The function permits local Vite development origins and only the exact additional origins in APP_ALLOWED_ORIGINS.
+4. Optionally set `GEMINI_MODEL` to `gemini-3.8-flash` and `GEMINI_API_VERSION` to `v1`. These are already the function defaults.
+5. Save the secrets. Supabase Edge Functions read updated secrets without needing a redeployment.
 
-Set secrets and deploy:
+A branch-preview URL will be different from the production Pages URL. Add its exact origin to `APP_ALLOWED_ORIGINS` after the Cloudflare preview deployment is available, if you want AI requests to work from that preview.
 
-    supabase secrets set --env-file supabase/functions/.env.local
-    supabase functions deploy clinical-assistant
-
-The function uses Supabase's project URL and publishable-key environment values to validate the caller's bearer token. It does not use a service-role key. JWT verification is enabled in supabase/config.toml.
-
-Never place GEMINI_API_KEY in Vite .env.local, a VITE_ variable, a browser bundle, GitHub source or client-side configuration. Only the server-side Function secret store should contain it.
+Never paste the Gemini key into this chat, GitHub, frontend source, a browser console, a `VITE_` variable or Cloudflare's public build variables. Only the Supabase Edge Function secret store should contain it.
 
 ## Privacy and clinical-safety boundaries
 
 - Submit synthetic or properly de-identified cases only. Do not submit patient names, hospital numbers, phone numbers, addresses, exact dates of birth, identifiable photos or scans.
-- The frontend sends only the current stage's limited context, not the complete clerking note or the case label.
+- The frontend sends only the current stage's limited context, not the complete clerking note or case label.
 - The function rejects unexpected operations/stages and limits request size and model output size.
 - The Edge Function does not log the submitted clinical narrative and does not persist the prompt or result in WardWise tables.
-- store: false disables storage of the interaction for later API retrieval; it does not make a third-party AI request equivalent to an offline or institutionally approved clinical system.
+- `store: false` disables storage of the interaction for later API retrieval; it does not make a third-party AI request equivalent to an offline or institutionally approved clinical system.
 - The best-effort request guard permits up to 12 requests per minute per user ID per Edge Function instance. Instances do not share the counter. This is not a durable distributed quota, budget or abuse-control system; implement shared rate limiting, budget alerts and monitoring before production.
 - Model-generated questions and safety flags are educational suggestions, not diagnoses, clinical directives or verified facts. A qualified clinician must review representative outputs before release.
-- The function has not yet undergone live deployment tests, clinical prompt evaluation, an institutional privacy assessment or a full production security review.
+- The function has not yet undergone full live model evaluation, clinical prompt evaluation, institutional privacy assessment or production security review.
 
-## Local function development and verification
+## Verification checklist
 
-With a NEW WardWise project linked through the Supabase CLI:
-
-    supabase functions serve clinical-assistant --env-file supabase/functions/.env.local
-
-Run the frontend with that project's public URL and publishable key in .env.local. Use synthetic cases only. Verify:
+After the secrets and Auth URLs are configured, use synthetic cases only and verify:
 
 1. A signed-in learner can request a question for a supported stage.
 2. Requests without a valid user JWT are rejected.
@@ -67,4 +68,4 @@ Run the frontend with that project's public URL and publishable key in .env.loca
 6. No Gemini key or service-role key appears in browser build output.
 7. A clinician reviews outputs for history-taking relevance, false assumptions, red-flag handling and local practice context.
 
-Do not mark this integration live until the Edge Function is deployed to the separate WardWise project and these checks have passed.
+Do not mark this integration production-ready until these checks pass and clinician/institutional reviews are complete.
