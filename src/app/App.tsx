@@ -10,6 +10,7 @@ import { ProfileSetup } from '../features/auth/ProfileSetup';
 import { ClerkingWorkspace } from '../features/clerking/ClerkingWorkspace';
 import { createInitialClerkingDraft, type ClerkingDraft } from '../features/clerking/clerking.types';
 import { CaseLibrary } from '../features/case-library/CaseLibrary';
+import { PrivacyNotice } from '../features/privacy/PrivacyNotice';
 import { listClinicalCases, loadClinicalCase } from '../features/case-library/case.service';
 import type { ClinicalCaseSummary } from '../features/case-library/case.types';
 import type { SectionId } from './navigation';
@@ -113,7 +114,7 @@ function AppContent() {
   if (!auth.profile) return <ProfileSetup />;
 
   if (section === 'profile-settings') {
-    return <ProfileSetup profile={auth.profile} onCancel={() => navigate('workspace')} />;
+    return <div className="settings-hub"><ProfileSetup profile={auth.profile} onCancel={() => navigate('workspace')} /><PrivacyNotice /></div>;
   }
 
   return <AppShell
