@@ -61,7 +61,7 @@ describe('Virtual Patient Simulation', () => {
       created_at: '2026-10-31T08:00:00.000Z',
     }]);
     render(<VirtualPatientSimulation onBack={() => undefined}/>);
-    fireEvent.click(screen.getByRole('button',{name:/saved history/i}));
+    fireEvent.click(screen.getByRole('button',{name:/^saved history$/i}));
     expect(await screen.findByText(/Adult with abdominal pain/i)).toBeInTheDocument();
   });
 });
