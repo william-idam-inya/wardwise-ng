@@ -23,6 +23,11 @@ export type VirtualPatientScenario = {
   examination: string;
   investigations: string;
   requiredDomains: Array<{ id: string; label: string }>;
+  examinerRubric: {
+    examinationPoints: string[];
+    differentialConsiderations: string[];
+    reasoningPoints: string[];
+  };
   teachingDiagnosis: string;
   examinerNote: string;
 };
@@ -61,6 +66,27 @@ export const virtualPatientScenarios: VirtualPatientScenario[] = [
       { id: 'examination', label: 'Request examination findings' },
       { id: 'investigations', label: 'Request investigation results' },
     ],
+    examinerRubric: {
+      examinationPoints: [
+        'Review general condition and vital signs, including pulse and temperature.',
+        'Assess the abdomen systematically and document the exact site of tenderness and any guarding or peritoneal signs.',
+        'Consider examination of hernial orifices and genitalia when clinically appropriate, with consent and a chaperone as required.',
+        'Request senior review if peritoneal signs or physiological deterioration are present.',
+      ],
+      differentialConsiderations: [
+        'Acute appendicitis.',
+        'Gastroenteritis or another infective/inflammatory abdominal condition.',
+        'Urinary tract pathology, including ureteric colic or UTI.',
+        'Testicular torsion in a male with lower abdominal pain, especially if genital symptoms are present.',
+      ],
+      reasoningPoints: [
+        'Migration from the periumbilical region to the right lower quadrant is an important historical feature.',
+        'Localised right lower quadrant tenderness and guarding support an inflammatory process but do not prove appendicitis.',
+        'Raised white cell count and CRP are supportive but non-specific; they do not confirm the diagnosis.',
+        'No imaging result is supplied in this scenario, so do not state that imaging confirms the diagnosis.',
+        'The absence of described generalised rigidity does not exclude early or evolving disease.',
+      ],
+    },
     teachingDiagnosis: 'Scenario teaching impression: acute appendicitis is a leading consideration from the supplied pattern. This is not a real diagnosis and would require clinical assessment and appropriate investigations.',
     examinerNote: 'The scenario rewards clarification of migration, chronology, character, aggravating factors, associated symptoms and relevant past history. Ask for examination and investigations explicitly; do not infer unprovided findings.',
   },
@@ -95,6 +121,28 @@ export const virtualPatientScenarios: VirtualPatientScenario[] = [
       { id: 'examination', label: 'Request examination findings' },
       { id: 'investigations', label: 'Request investigation results' },
     ],
+    examinerRubric: {
+      examinationPoints: [
+        'Assess the child’s general appearance, activity, hydration, perfusion and age-appropriate vital signs.',
+        'Examine the abdomen for suprapubic tenderness, palpable bladder or mass where appropriate.',
+        'Assess for loin tenderness and look for alternative sources of fever.',
+        'Record the child’s weight and relevant clinical observations when required by the local pathway.',
+      ],
+      differentialConsiderations: [
+        'Lower urinary tract infection (cystitis).',
+        'Upper urinary tract infection (pyelonephritis), particularly when systemic features or loin symptoms are present.',
+        'Vulvovaginitis or local irritation as an alternative explanation for dysuria.',
+        'Other sources of fever, including respiratory or gastrointestinal infection.',
+        'Constipation or dysfunctional voiding as relevant contributors to recurrent urinary symptoms.',
+      ],
+      reasoningPoints: [
+        'Dysuria, frequency and fever increase the likelihood of UTI when considered together.',
+        'Both leukocyte esterase and nitrite are positive in this scenario; the interpretation should follow the applicable age-specific guideline.',
+        'The culture is pending: distinguish a clinically supported working diagnosis from a culture-confirmed result.',
+        'The dipstick alone does not establish the level of infection or exclude every alternative source of illness.',
+        'A child who is seriously unwell or deteriorating requires prompt senior assessment.',
+      ],
+    },
     teachingDiagnosis: 'Scenario teaching impression: suspected urinary tract infection. The scenario includes a positive urine dipstick, but the culture is pending. Do not convert this into a confirmed diagnosis.',
     examinerNote: 'The scenario rewards urinary symptom clarification, fever chronology, hydration and systemic features, abdominal/loin symptoms, previous UTI, medication history and requests for examination and urine results. Keep the distinction between suspected infection and pending culture.',
   },
