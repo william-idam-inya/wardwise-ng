@@ -68,20 +68,24 @@ Cloudflare Pages has been connected to the public GitHub repository `william-ida
 
 For local development, copy `.env.example` to `.env.local` and use the same two values. A publishable key is designed to be exposed in browser code when RLS is correctly enabled. Never put a service-role key, Supabase secret key, database password or Gemini API key in `.env.local` or a `VITE_` variable.
 
-## 6. Verify profile privacy with two accounts — not yet completed
+## 6. Database-level RLS isolation — verified; browser-level test remains
 
-The database policies have been inspected, but account-to-account behaviour has not yet been verified. After Auth URLs are configured:
+On 31 October 2026, the live WardWise database passed a rollback-only isolation test using two temporary synthetic Auth users and fixture rows. The transaction verified owner-only reads across `profiles`, `clinical_cases`, `clerking_sessions`, `simulation_sessions`, `learning_bookmarks` and `audit_events`; cross-owner updates and deletes affected zero rows; attempts to insert another user's records or transfer case ownership were rejected; and authenticated browser users could not write audit events. The transaction was rolled back, and no test accounts or fixture rows were retained.
+
+The same checks are preserved in `supabase/tests/rls_isolation.test.sql` and are run in GitHub Actions using `supabase test db` against a fresh local database.
+
+A separate real-account browser journey is still required after hosted Auth URLs are configured:
 
 1. Create test account A and complete its profile.
 2. Create test account B and complete its profile.
-3. As A, verify A can select and update A's profile.
-4. As A, query B's profile ID directly; it must return no row.
-5. As A, attempt to insert or update a profile row using B's ID; it must be rejected.
+3. As A, verify A can create, read and update A's profile and cases.
+4. As A, query B's profile and case IDs directly; neither should return a row.
+5. As A, attempt to update/delete B's records and insert records using B's owner ID; no cross-account access should be possible.
 6. Repeat the reverse checks as B.
-7. With no session, confirm the profile table cannot be read or changed.
-8. Check Supabase security advisors and database policy results.
+7. With no session, verify the Data API denies access.
+8. Check Supabase security advisors and preserve the result of the CI database tests.
 
-Extend the tests to cover cases, clerking sessions, simulation sessions and bookmarks. Account A must not read, update or delete account B's records. Do not mark user-data isolation as verified until these tests pass.
+The SQL test is database-level verification, not a substitute for the browser journey or institutional privacy approval.
 
 ## 7. Clinical cases and clerking sessions
 
@@ -110,7 +114,7 @@ The authenticated `clinical-assistant` Supabase Edge Function is deployed (versi
 
 `https://ooutidbssimzvvgkinek.supabase.co/functions/v1/clinical-assistant`
 
-The function still needs the private `GEMINI_API_KEY` and `APP_ALLOWED_ORIGINS` secrets before it can answer AI requests. See `docs/gemini-setup.md`. Do not send API keys through chat or commit them to Git.
+The function still needs the private `GEMINI_API_KEY` secret before it can answer AI requests. The current localhost and WardWise Pages origins are explicitly allowed in the function code, so `APP_ALLOWED_ORIGINS` is optional unless an additional origin (for example, a future custom domain) is introduced. See `docs/gemini-setup.md`. Do not send API keys through chat or commit them to Git.
 
 ## 10. Privacy and clinical-safety boundaries
 
