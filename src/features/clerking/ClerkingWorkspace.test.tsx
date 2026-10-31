@@ -38,7 +38,7 @@ describe('guided clerking workspace', () => {
 
   it('provides a distinct review-of-systems stage', () => {
     renderClerking();
-    fireEvent.click(screen.getByRole('button', { name: /review of systems/i }));
+    fireEvent.click(screen.getAllByRole('button', { name: /review of systems/i })[0]);
     expect(screen.getByRole('heading', { name: /review of systems/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/cardiovascular status/i)).toHaveValue('Not elicited');
   });
@@ -54,7 +54,7 @@ describe('guided clerking workspace', () => {
       model: 'gemini-3.8-flash',
     });
     renderClerking();
-    fireEvent.click(screen.getByRole('button', { name: /biodata/i }));
+    fireEvent.click(screen.getAllByRole('button', { name: /biodata/i })[0]);
     fireEvent.click(screen.getByRole('button', { name: /ask for next question/i }));
 
     expect(await screen.findByRole('heading', { name: /when did the symptom first begin/i })).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe('guided clerking workspace', () => {
 
   it('shows the generated note preview and review action', () => {
     renderClerking();
-    fireEvent.click(screen.getByRole('button', { name: /review note/i }));
+    fireEvent.click(screen.getAllByRole('button', { name: /review note/i })[0]);
     expect(screen.getByText(/PATIENT CLERKING NOTE — SYNTHETIC CASE/)).toBeInTheDocument();
     expect(screen.getByText(/unsaved changes are held in memory/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /mark note reviewed/i })).toBeInTheDocument();
