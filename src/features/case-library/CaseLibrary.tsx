@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Archive, Copy, FileHeart, FolderSearch, Pencil, RefreshCw, Search, ShieldCheck, Trash2 } from 'lucide-react';
 import { ProcessingIndicator } from '../../components/ProcessingIndicator';
-import { archiveClinicalCase, deleteClinicalCase, duplicateClinicalCase, listClinicalCases } from './case.service';
+import { archiveClinicalCase, deleteClinicalCase, duplicateClinicalCase, listClinicalCases, PartialCaseSaveError } from './case.service';
 import type { ClinicalCaseSummary } from './case.types';
 
 type Props = {
@@ -71,7 +71,12 @@ export function CaseLibrary({ userId, refreshKey = 0, onOpenCase, onStartNew }: 
       setSuccessMessage('Created a separate draft: ' + copy.title);
       await reload();
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'The case could not be duplicated.');
+      if (error instanceof PartialCaseSaveError) {
+        await reload();
+        setErrorMessage(error.message + ' The copied case record exists; reopen it and retry saving its clerking progress.');
+      } else {
+        setErrorMessage(error instanceof Error ? error.message : 'The case could not be duplicated.');
+      }
     } finally {
       setWorkingId(null);
     }
