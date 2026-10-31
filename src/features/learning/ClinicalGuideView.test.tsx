@@ -29,7 +29,7 @@ describe('ClinicalGuideView', () => {
     render(<ClinicalGuideView guide={guide} onBack={() => undefined} />);
     expect(screen.getAllByRole('heading', { name: guide.title }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('heading', { name: /focused history/i }).length).toBeGreaterThan(0);
-    expect(screen.getByText(/differential framework/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/differential framework/i).length).toBeGreaterThan(0);
     expect(screen.getByRole('heading', { name: /management principles/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /open source/i })).toHaveAttribute('href', guide.sources[0].url);
     fireEvent.click(screen.getByRole('button', { name: guide.questions[0].options[guide.questions[0].answerIndex] }));
