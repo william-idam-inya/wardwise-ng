@@ -23,3 +23,15 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+
+  database:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v3
+        with:
+          version: latest
+      - name: Start local Supabase database
+        run: supabase db start
+      - name: Run database and RLS regression tests
+        run: supabase test db
