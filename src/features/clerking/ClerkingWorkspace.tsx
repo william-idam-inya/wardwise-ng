@@ -401,7 +401,7 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
             <TextInput label="Age / age band" value={draft.biodata.age} onChange={(value) => updateBiodata('age', value)} placeholder="e.g. 8 years"/>
             <SelectField label="Sex" value={draft.biodata.sex} onChange={(value) => updateBiodata('sex', value as SexAtPresentation)} options={[{value:'not_recorded',label:'Not recorded'},{value:'female',label:'Female'},{value:'male',label:'Male'},{value:'intersex',label:'Intersex'}]}/>
             <TextInput label="Occupation / schooling" value={draft.biodata.occupation} onChange={(value) => updateBiodata('occupation', value)} placeholder="e.g. Primary school pupil"/>
-            <TextInput label="Residence context (non-identifying)" value={draft.biodata.residenceContext} onChange={(value) => updateBiodata('residenceContext', value)} placeholder="e.g. Urban / rural"/>
+            <TextInput label="Place of origin / residence context (non-identifying)" value={draft.biodata.residenceContext} onChange={(value) => updateBiodata('residenceContext', value)} placeholder="e.g. Rural community in Anambra State"/>
             <TextInput label="Source of history" value={draft.biodata.source} onChange={(value) => updateBiodata('source', value)} placeholder="e.g. Patient / mother / caregiver"/>
             <SelectField label="Reliability of history" value={draft.biodata.reliability} onChange={(value) => updateBiodata('reliability', value)} options={[{value:'',label:'Not assessed'},...reliabilityOptions.map((value) => ({value,label:value}))]}/>
           </div> : null}
