@@ -20,7 +20,7 @@ describe('WardWise NG access and workspace foundation', () => {
     render(<Workspace onNavigate={onNavigate} />);
     expect(screen.getByRole('heading', { name: /good to have you here/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /your case library starts here/i })).toBeInTheDocument();
-    expect(screen.getByText(/after secure account and storage features are connected/i)).toBeInTheDocument();
+    expect(screen.getByText(/case database may not be connected yet/i)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: /start a clinical clerking/i }));
     expect(onNavigate).toHaveBeenCalledWith('clerking');
   });
