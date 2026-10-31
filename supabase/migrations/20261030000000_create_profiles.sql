@@ -31,7 +31,7 @@ revoke all on schema private from public, anon, authenticated, service_role;
 -- Supabase's 30 October 2026 Data API change requires explicit table grants.
 grant usage on schema public to authenticated;
 -- The authenticated role is the only browser role permitted to access profiles.
-revoke all on table public.profiles from anon, authenticated;
+revoke all on table public.profiles from anon, authenticated, service_role;
 grant select, insert, update, delete on table public.profiles to authenticated;
 
 alter table public.profiles enable row level security;
