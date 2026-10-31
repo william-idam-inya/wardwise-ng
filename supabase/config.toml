@@ -12,7 +12,12 @@ major_version = 17
 [auth]
 enabled = true
 site_url = "http://localhost:5173"
-additional_redirect_urls = ["http://localhost:5173/**", "https://*.pages.dev/**"]
+additional_redirect_urls = [
+  "http://localhost:5173/**",
+  "http://127.0.0.1:5173/**",
+  "https://wardwise-ng.pages.dev/**",
+  "https://*.wardwise-ng.pages.dev/**"
+]
 
 [functions.clinical-assistant]
 verify_jwt = true
