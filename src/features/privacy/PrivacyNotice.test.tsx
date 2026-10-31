@@ -8,10 +8,10 @@ afterEach(() => {
 });
 
 describe('PrivacyNotice', () => {
-  it('clearly identifies the notice as a development notice and describes missing backend readiness', () => {
+  it('clearly identifies the notice as a development notice and describes the live backend status', () => {
     render(<PrivacyNotice />);
     expect(screen.getByText(/development notice — not a final privacy policy/i)).toBeInTheDocument();
-    expect(screen.getByText(/separate WardWise Supabase project has not yet been created/i)).toBeInTheDocument();
+    expect(screen.getByText(/dedicated WardWise Supabase project has been created and the initial database migrations are applied/i)).toBeInTheDocument();
     expect(screen.getByText(/data-subject request workflow are not implemented/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /read the nigeria data protection act/i })).toHaveAttribute('href', 'https://ndpc.gov.ng/ndp-act-2023/');
   });
