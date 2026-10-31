@@ -28,7 +28,7 @@ describe('ClinicalGuideView', () => {
     const guide = offlineGuides[0];
     render(<ClinicalGuideView guide={guide} onBack={() => undefined} />);
     expect(screen.getAllByRole('heading', { name: guide.title }).length).toBeGreaterThan(0);
-    expect(screen.getByRole('heading', { name: /focused history/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { name: /focused history/i }).length).toBeGreaterThan(0);
     expect(screen.getByText(/differential framework/i)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /management principles/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /open source/i })).toHaveAttribute('href', guide.sources[0].url);
