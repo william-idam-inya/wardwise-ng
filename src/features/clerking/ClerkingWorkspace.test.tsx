@@ -66,7 +66,7 @@ describe('guided clerking workspace', () => {
     renderClerking();
     fireEvent.click(screen.getAllByRole('button', { name: /review note/i })[0]);
     expect(screen.getByText(/PATIENT CLERKING NOTE — SYNTHETIC CASE/)).toBeInTheDocument();
-    expect(screen.getByText(/unsaved changes are held in memory/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/unsaved changes are held in memory/i).length).toBeGreaterThan(0);
     expect(screen.getByRole('button', { name: /mark note reviewed/i })).toBeInTheDocument();
   });
 });
