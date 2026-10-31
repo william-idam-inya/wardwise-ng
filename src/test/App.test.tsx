@@ -28,7 +28,7 @@ describe('WardWise NG access and workspace foundation', () => {
   it('opens and filters the learning catalogue', () => {
     render(<SectionPage section="learning-catalogue" onNavigate={vi.fn()} />);
     fireEvent.change(screen.getByRole('textbox', { name: /search learning catalogue/i }), { target: { value: 'neonatology' } });
-    expect(screen.getByRole('button', { name: /neonatology/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /neonatology/i })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /cardiology/i })).not.toBeInTheDocument();
   });
 
