@@ -144,3 +144,20 @@ export async function deleteClinicalCase(caseId: string, userId: string): Promis
     .eq('user_id', userId);
   if (error) throw error;
 }
+
+export async function duplicateClinicalCase(caseId: string, userId: string): Promise<ClinicalCaseRecord> {
+  const loaded = await loadClinicalCase(caseId, userId);
+  const copiedTitle = (`Copy of ${loaded.clinicalCase.title}`).slice(0, 180);
+  const draft: ClerkingDraft = {
+    ...loaded.draft,
+    caseLabel: copiedTitle,
+  };
+
+  // Save as a new case ID; the original row and session are never updated.
+  return saveClerkingDraft({
+    userId,
+    caseId: null,
+    draft,
+    currentStage: loaded.currentStage,
+  });
+}
