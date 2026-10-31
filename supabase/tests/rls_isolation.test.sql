@@ -63,23 +63,19 @@ select is((select count(*)::integer from public.simulation_sessions), 1, 'A sees
 select is((select count(*)::integer from public.learning_bookmarks), 1, 'A sees only A bookmarks');
 select is((select count(*)::integer from public.audit_events), 1, 'A sees only A audit events');
 
-select is((
-  with changed as (
-    update public.clinical_cases set title = 'Cross-user mutation'
+select is_empty(
+  $update public.clinical_cases set title = 'Cross-user mutation'
     where id = '00000000-0000-4000-8000-000000000202'
-    returning id
-  )
-  select count(*)::integer from changed
-), 0, 'A cannot update B case');
+    returning id$,
+  'A cannot update B case'
+);
 
-select is((
-  with removed as (
-    delete from public.profiles
+select is_empty(
+  $delete from public.profiles
     where id = '00000000-0000-4000-8000-000000000102'
-    returning id
-  )
-  select count(*)::integer from removed
-), 0, 'A cannot delete B profile');
+    returning id$,
+  'A cannot delete B profile'
+);
 
 select throws_ok(
   $$insert into public.clinical_cases (user_id, title, specialty, setting)
@@ -140,23 +136,19 @@ select is((select count(*)::integer from public.simulation_sessions), 1, 'B sees
 select is((select count(*)::integer from public.learning_bookmarks), 1, 'B sees only B bookmarks');
 select is((select count(*)::integer from public.audit_events), 1, 'B sees only B audit events');
 
-select is((
-  with changed as (
-    update public.clinical_cases set title = 'Cross-user mutation'
+select is_empty(
+  $update public.clinical_cases set title = 'Cross-user mutation'
     where id = '00000000-0000-4000-8000-000000000201'
-    returning id
-  )
-  select count(*)::integer from changed
-), 0, 'B cannot update A case');
+    returning id$,
+  'B cannot update A case'
+);
 
-select is((
-  with removed as (
-    delete from public.profiles
+select is_empty(
+  $delete from public.profiles
     where id = '00000000-0000-4000-8000-000000000101'
-    returning id
-  )
-  select count(*)::integer from removed
-), 0, 'B cannot delete A profile');
+    returning id$,
+  'B cannot delete A profile'
+);
 
 select throws_ok(
   $$insert into public.clinical_cases (user_id, title, specialty, setting)
