@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { CaseLibrary } from './CaseLibrary';
 import { archiveClinicalCase, duplicateClinicalCase, listClinicalCases } from './case.service';
@@ -22,28 +22,17 @@ const exampleCase = {
 };
 
 beforeEach(() => {
-  cleanup();
   vi.clearAllMocks();
   vi.mocked(listClinicalCases).mockResolvedValue([]);
   vi.mocked(archiveClinicalCase).mockResolvedValue(undefined);
-  vi.mocked(duplicateClinicalCase).mockResolvedValue({ ...exampleCase, id: 'case-copy', title: 'Copy of Synthetic child with abdominal pain', status: 'draft' });
+  vi.mocked(duplicateClinicalCase).mockResolvedValue({
+    ...exampleCase,
+    id: 'case-copy',
+    title: 'Copy of Synthetic child with abdominal pain',
+  } as Awaited<ReturnType<typeof duplicateClinicalCase>>);
   vi.stubGlobal('confirm', vi.fn(() => true));
-
-
-  it('duplicates a case as a separate owner-scoped draft', async () => {
-    vi.mocked(listClinicalCases)
-      .mockResolvedValueOnce([exampleCase])
-      .mockResolvedValueOnce([{ ...exampleCase }, { ...exampleCase, id: 'case-copy', title: 'Copy of Synthetic child with abdominal pain' }]);
-    render(<CaseLibrary userId="user-a" onOpenCase={vi.fn()} onStartNew={vi.fn()} />);
-
-    await screen.findByText('Synthetic child with abdominal pain');
-    fireEvent.click(screen.getByRole('button', { name: /duplicate synthetic child with abdominal pain/i }));
-
-    expect(duplicateClinicalCase).toHaveBeenCalledWith('case-1', 'user-a');
-    expect(await screen.findByRole('status')).toHaveTextContent(/created a separate draft/i);
-  });
-
 });
+afterEach(() => cleanup());
 
 describe('private case library', () => {
   it('loads and opens only the selected learner case', async () => {
@@ -71,5 +60,21 @@ describe('private case library', () => {
     await screen.findByText('Synthetic child with abdominal pain');
     fireEvent.click(screen.getByRole('button', { name: /archive synthetic child with abdominal pain/i }));
     expect(archiveClinicalCase).toHaveBeenCalledWith('case-1', 'user-a');
+  });
+
+  it('duplicates a case as a separate owner-scoped draft', async () => {
+    vi.mocked(listClinicalCases)
+      .mockResolvedValueOnce([exampleCase])
+      .mockResolvedValueOnce([
+        exampleCase,
+        { ...exampleCase, id: 'case-copy', title: 'Copy of Synthetic child with abdominal pain' },
+      ]);
+    render(<CaseLibrary userId="user-a" onOpenCase={vi.fn()} onStartNew={vi.fn()} />);
+
+    await screen.findByText('Synthetic child with abdominal pain');
+    fireEvent.click(screen.getByRole('button', { name: /duplicate synthetic child with abdominal pain/i }));
+
+    expect(duplicateClinicalCase).toHaveBeenCalledWith('case-1', 'user-a');
+    expect(await screen.findByRole('status')).toHaveTextContent(/created a separate draft/i);
   });
 });
