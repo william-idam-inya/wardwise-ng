@@ -92,7 +92,19 @@ function allowedOrigin(origin: string | null): boolean {
     .map((value) => value.trim())
     .filter(Boolean);
   const permitted = new Set(["http://localhost:5173", "http://127.0.0.1:5173", ...configured]);
-  return permitted.has(origin);
+  if (permitted.has(origin)) return true;
+
+  // Cloudflare Pages uses a unique hostname for each deployment preview.
+  // Restrict this allowance to HTTPS origins on this exact Pages project domain.
+  try {
+    const parsed = new URL(origin);
+    return parsed.protocol === "https:"
+      && parsed.port === ""
+      && (parsed.hostname === "wardwise-ng.pages.dev"
+        || parsed.hostname.endsWith(".wardwise-ng.pages.dev"));
+  } catch {
+    return false;
+  }
 }
 
 function consumeLocalRateLimit(userId: string): boolean {
