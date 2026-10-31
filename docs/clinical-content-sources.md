@@ -1,6 +1,6 @@
 # Clinical content sources and review
 
-WardWise NG's offline Clinical Tutor contains four source-linked educational summaries. They are not exhaustive guidelines, clinical decision-support algorithms or instructions to prescribe.
+WardWise NG's offline Clinical Tutor contains five source-linked educational summaries. They are not exhaustive guidelines, clinical decision-support algorithms or instructions to prescribe.
 
 ## Jaundice
 Source: [Merck Manual Professional Edition — Jaundice](https://www.merckmanuals.com/professional/hepatic-and-biliary-disorders/approach-to-the-patient-with-liver-disease/jaundice). The guide covers timing of jaundice and dark urine, stool changes, pruritus, pain, relevant exposure/past history, examination, biochemical tests and red flags.
@@ -31,3 +31,12 @@ The guide avoids drug regimens and leaves the operative/non-operative decision t
 ## Differential reasoning and management teaching
 
 Each starter guide now provides a structured differential framework and high-level management principles. These sections ask students to compare possible diagnostic groups with supporting clues and cautions; they do not confirm diagnoses or supply autonomous drug regimens. The paediatric UTI guide explicitly separates NICE guidance from the need to follow local Nigerian/institutional protocols. All differential and management material remains subject to qualified clinician review before being treated as endorsed teaching content.
+
+
+## Posterior urethral valves (PUV)
+
+Source: [EAU Guidelines on Paediatric Urology 2026 — Congenital Lower Urinary Tract Obstruction](https://uroweb.org/guidelines/paediatric-urology/chapter/congenital-lower-urinary-tract-obstruction).
+
+The guide covers antenatal and neonatal recognition, renal and electrolyte monitoring, the role of ultrasound and VCUG, urgent bladder drainage and stabilisation, specialist-directed endoscopic valve ablation, and lifelong renal/bladder follow-up. The 2026 EAU guideline recommends VCUG in suspected PUV, with lateral urethral views during voiding and without a catheter in situ for those views. It also recommends bladder drainage in newborns with suspected infravesical obstruction and lifelong monitoring of renal and bladder function.
+
+This is a learner-facing summary, not a neonatal emergency protocol. Suspected obstruction requires urgent specialist assessment and local pathway adherence.
