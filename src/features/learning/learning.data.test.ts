@@ -8,6 +8,7 @@ describe('offline clinical learning content', () => {
     expect(findOfflineGuide('acute abdominal pain')?.id).toBe('acute-abdominal-pain');
     expect(findOfflineGuide('appendicitis')?.id).toBe('appendicitis-assessment');
     expect(findOfflineGuide('PUV')?.id).toBe('posterior-urethral-valves');
+    expect(findOfflineGuide('hypospadias')?.id).toBe('hypospadias-assessment');
   });
 
   it('includes secure references and valid answer indices in all guides', () => {
@@ -29,6 +30,13 @@ describe('offline clinical learning content', () => {
     expect(guide.investigationsToConsider.join(' ')).toMatch(/VCUG|voiding cystourethrography/i);
     expect(guide.escalationFeatures.join(' ')).toMatch(/oliguria|anuria/i);
     expect(guide.keyPoints.join(' ')).toMatch(/lifelong monitoring/i);
+  });
+
+  it('preserves the hypospadias bilateral cryptorchidism and anatomy cautions', () => {
+    const guide = findOfflineGuide('hypospadias')!;
+    expect(guide.escalationFeatures.join(' ')).toMatch(/bilateral undescended testes/i);
+    expect(guide.keyPoints.join(' ')).toMatch(/urethral plate quality/i);
+    expect(guide.managementPrinciples.join(' ')).toMatch(/Preserve the prepuce/i);
   });
 
   it('preserves the NICE referral warning for suspected UTI in babies under 3 months', () => {
