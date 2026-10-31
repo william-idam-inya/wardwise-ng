@@ -64,16 +64,16 @@ select is((select count(*)::integer from public.learning_bookmarks), 1, 'A sees 
 select is((select count(*)::integer from public.audit_events), 1, 'A sees only A audit events');
 
 select is_empty(
-  $update public.clinical_cases set title = 'Cross-user mutation'
-    where id = '00000000-0000-4000-8000-000000000202'
-    returning id$,
+  'update public.clinical_cases set title = ''Cross-user mutation''
+    where id = ''00000000-0000-4000-8000-000000000202''
+    returning id',
   'A cannot update B case'
 );
 
 select is_empty(
-  $delete from public.profiles
-    where id = '00000000-0000-4000-8000-000000000102'
-    returning id$,
+  'delete from public.profiles
+    where id = ''00000000-0000-4000-8000-000000000102''
+    returning id',
   'A cannot delete B profile'
 );
 
@@ -137,16 +137,16 @@ select is((select count(*)::integer from public.learning_bookmarks), 1, 'B sees 
 select is((select count(*)::integer from public.audit_events), 1, 'B sees only B audit events');
 
 select is_empty(
-  $update public.clinical_cases set title = 'Cross-user mutation'
-    where id = '00000000-0000-4000-8000-000000000201'
-    returning id$,
+  'update public.clinical_cases set title = ''Cross-user mutation''
+    where id = ''00000000-0000-4000-8000-000000000201''
+    returning id',
   'B cannot update A case'
 );
 
 select is_empty(
-  $delete from public.profiles
-    where id = '00000000-0000-4000-8000-000000000101'
-    returning id$,
+  'delete from public.profiles
+    where id = ''00000000-0000-4000-8000-000000000101''
+    returning id',
   'B cannot delete A profile'
 );
 
