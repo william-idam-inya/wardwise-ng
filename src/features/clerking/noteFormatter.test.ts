@@ -43,6 +43,25 @@ describe('clerking note formatter', () => {
     expect(note).toContain('Cause / context: Not elicited');
   });
 
+  it('begins the biodata with an I present statement using only supplied details', () => {
+    const draft = createInitialClerkingDraft();
+    draft.biodata.age = '8 years';
+    draft.biodata.sex = 'male';
+    draft.biodata.residenceContext = 'Anambra State';
+    draft.complaints[0] = { ...draft.complaints[0], symptom: 'Abdominal pain', duration: '2 days' };
+
+    const note = formatClerkingNote(draft);
+    expect(note).toContain('I present a male patient aged 8 years from Anambra State presenting with Abdominal pain (2 days).');
+    expect(note).toContain('Place of origin / residence context: Anambra State');
+  });
+
+  it('does not invent age, sex, origin or a presenting complaint', () => {
+    const note = formatClerkingNote(createInitialClerkingDraft());
+    expect(note).toContain('I present a patient for clinical assessment.');
+    expect(note).not.toContain('I present a male patient');
+    expect(note).not.toContain('from Anambra State');
+  });
+
   it('does not fabricate examination or investigation results', () => {
     const note = formatClerkingNote(createInitialClerkingDraft());
     expect(note).toContain('Status: Not assessed');
