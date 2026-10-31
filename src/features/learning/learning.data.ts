@@ -541,6 +541,116 @@ export const offlineGuides: ClinicalLearningGuide[] = [
     reviewedOn: '31 October 2026',
     educationalNote: 'This is an educational summary of EAU guidance, not a neonatal emergency protocol. A suspected PUV requires urgent assessment by the paediatric/neonatal and urology teams. Follow current local Nigerian protocols and the treating specialist team.',
   },
+  {
+    id: 'hypospadias-assessment',
+    title: 'Approach to a child with hypospadias',
+    discipline: 'Surgery · Paediatric Urology',
+    subtitle: 'Anatomical classification, examination, associated anomalies and reconstruction principles',
+    summary: 'Hypospadias is a congenital condition in which the urethral meatus opens on the ventral aspect of the penis at a more proximal position than the usual glanular tip. Assessment should document the meatal position and associated anatomy; the meatal position alone does not fully define severity.',
+    learningObjectives: [
+      'Classify hypospadias by the anatomical position of the meatus.',
+      'Describe the local examination findings required to characterise severity.',
+      'Recognise bilateral undescended testes as an important red flag for a possible difference/disorder of sex development (DSD).',
+      'Understand the functional goals, broad timing and complications of hypospadias reconstruction.',
+    ],
+    historyPrompts: [
+      'When the abnormal penile appearance was first noticed and whether the diagnosis was made at birth.',
+      'Urinary stream: direction, spraying, ventral deflection, difficulty voiding, straining or prolonged voiding.',
+      'Any history of urinary tract infection, dysuria, poor urinary flow, post-void dribbling or ballooning.',
+      'Previous circumcision, penile surgery, catheterisation or other urological procedure; document any prior hormonal treatment.',
+      'Pregnancy and birth history, including gestational age and birth weight where known.',
+      'Relevant family history of hypospadias, undescended testes or other genital development differences.',
+      'Caregiver concerns about genital appearance, voiding, future function and the timing of specialist assessment.',
+    ],
+    examinationPrompts: [
+      'Inspect and document the exact position, shape and apparent width of the urethral meatus.',
+      'Describe the preputial hood and ventral foreskin deficiency; note the appearance of the scrotum and any penoscrotal transposition.',
+      'Measure or document penile length and glans size/shape where clinically appropriate.',
+      'Assess the degree and direction of ventral curvature (chordee) using an appropriate specialist examination; do not rely on meatal position alone.',
+      'Assess both testes for position and document any unilateral or bilateral cryptorchidism, as well as relevant inguinal findings.',
+      'Keep examination findings descriptive and objective; definitive assessment of curvature and urethral plate quality may require specialist intraoperative evaluation.',
+    ],
+    investigationsToConsider: [
+      'Hypospadias is primarily a clinical diagnosis based on examination of the meatus, penis, foreskin and scrotum.',
+      'The EAU panel consensus is not to perform routine imaging studies in otherwise isolated hypospadias.',
+      'When hypospadias is associated with bilateral undescended testes, prompt specialist genetic and endocrine evaluation is required to assess for a DSD, including exclusion of congenital adrenal hyperplasia.',
+      'Additional tests should be determined by the associated anomalies and the paediatric urology/endocrine team, not ordered as a routine panel for every child.',
+    ],
+    differentialFrameworks: [
+      {
+        diagnosisGroup: 'Distal, middle or proximal hypospadias',
+        featuresToExplore: ['Distal/anterior: glanular or distal shaft meatus', 'Middle: penile meatus', 'Proximal/posterior: penoscrotal, scrotal or perineal meatus'],
+        caution: 'The meatal position is a useful classification descriptor but does not alone describe severity; penile length, curvature, glans and urethral plate quality also matter.',
+      },
+      {
+        diagnosisGroup: 'Hypospadias with possible DSD',
+        featuresToExplore: ['Proximal hypospadias', 'Bilateral undescended testes', 'Small or atypical external genitalia or other congenital findings'],
+        caution: 'Bilateral cryptorchidism with hypospadias requires prompt specialist genetic and endocrine assessment. Do not assume a specific chromosomal, hormonal or DSD diagnosis from external appearance alone.',
+      },
+      {
+        diagnosisGroup: 'Other causes of abnormal urinary stream or penile appearance',
+        featuresToExplore: ['Meatal stenosis', 'Congenital penile curvature without hypospadias', 'Other congenital urethral or genital anomalies'],
+        caution: 'Clarify the anatomical meatal opening and the source of any urinary spraying, dribbling or ballooning before assigning a diagnosis.',
+      },
+    ],
+    managementPrinciples: [
+      'Refer for assessment by a paediatric urologist or appropriately experienced paediatric surgeon; management depends on anatomy, function, associated anomalies and family counselling.',
+      'Preserve the prepuce pending specialist assessment. Preputial tissue may be useful for urethral reconstruction or skin coverage; routine circumcision before the reconstructive plan is clarified may remove useful tissue.',
+      'Therapeutic objectives include a functional urinary stream, correction of significant curvature, an adequate-calibre neourethra, a glanular meatus and appropriate penile skin coverage.',
+      'The EAU guideline describes 6–18 months as the usual age range for primary repair, but timing must be individualised by the specialist team and local circumstances.',
+      'Technique selection depends on meatal position, curvature, glans size, urethral plate quality and the need for single-stage or staged reconstruction. This guide does not prescribe an operative technique.',
+      'Caregiver counselling should cover functional and aesthetic aims, possible complications, uncertainty and the need for long-term follow-up.',
+    ],
+    escalationFeatures: [
+      'Hypospadias with bilateral undescended testes: prompt paediatric urology and multidisciplinary DSD assessment.',
+      'Proximal hypospadias with atypical genital findings or other features raising concern for a DSD.',
+      'Urinary retention, markedly poor stream, recurrent UTI or suspected meatal stenosis.',
+      'Previous repair with urinary fistula, wound/glans dehiscence, recurrent curvature or obstructive voiding symptoms.',
+    ],
+    keyPoints: [
+      'Classify by meatal position: distal/anterior, middle/penile or proximal/posterior.',
+      'Severity assessment should also consider penile length, curvature, glans size/shape and urethral plate quality.',
+      'Bilateral undescended testes in a child with hypospadias requires prompt genetic and endocrine work-up to exclude a DSD, particularly congenital adrenal hyperplasia.',
+      'Routine imaging is not recommended by the EAU panel for otherwise isolated hypospadias.',
+      'The EAU guideline gives 6–18 months as the usual age range for primary repair; this does not replace an individual specialist decision.',
+      'Long-term follow-up is important because fistula, meatal stenosis, urethral stricture, recurrent curvature and voiding dysfunction can present later.',
+    ],
+    questions: [
+      {
+        question: 'Which findings should be considered in addition to meatal position when assessing hypospadias severity?',
+        options: ['Only the colour of the foreskin', 'Penile length, curvature, glans size/shape and urethral plate quality', 'Birth weight alone', 'The presence of a circumcision scar only'],
+        answerIndex: 1,
+        explanation: 'The EAU guideline notes that meatal position alone may not represent the complexity of hypospadias. Penile length, curvature, glans and urethral plate quality should also be considered.',
+      },
+      {
+        question: 'A newborn has proximal hypospadias and bilateral undescended testes. What is the important next assessment?',
+        options: ['Routine circumcision', 'Prompt specialist genetic and endocrine work-up for possible DSD', 'No further assessment if urine is passed', 'Routine renal imaging for every isolated hypospadias'],
+        answerIndex: 1,
+        explanation: 'The EAU recommends complete genetic and endocrine work-up soon after birth in patients with hypospadias and bilaterally undescended testes to exclude DSD, particularly congenital adrenal hyperplasia.',
+      },
+      {
+        question: 'What age range does the EAU describe as usual for primary hypospadias repair?',
+        options: ['First 24 hours after birth', '6–18 months', 'After puberty in every case', 'Only after toilet training'],
+        answerIndex: 1,
+        explanation: 'The guideline describes 6–18 months as the usual age range. The decision and operative plan remain individualised by the paediatric urology team.',
+      },
+    ],
+    aliases: ['hypospadias', 'hypospadias in children', 'distal hypospadias', 'proximal hypospadias', 'penile chordee', 'hooded foreskin'],
+    sources: [
+      {
+        label: 'EAU Guidelines on Paediatric Urology — Hypospadias',
+        url: 'https://uroweb.org/guidelines/paediatric-urology/chapter/hypospadias',
+        detail: 'Section updated in the 2025 EAU Paediatric Urology guideline; anatomy, diagnostic evaluation, indications, timing and outcomes.',
+      },
+      {
+        label: 'EAU Paediatric Urology — Summary of 2025 changes',
+        url: 'https://uroweb.org/guidelines/paediatric-urology/summary-of-changes/2025',
+        detail: 'Confirms section 3.7 (Hypospadias) as one of the sections revised in the 2025 edition.',
+      },
+    ],
+    reviewedOn: '31 October 2026',
+    educationalNote: 'This is a student learning summary, not an operative guide. Refer children for paediatric urology assessment, preserve potentially useful preputial tissue until the surgical plan is known, and follow local Nigerian protocols and specialist advice.',
+  },
 ];
 
 export function findOfflineGuide(topic: string): ClinicalLearningGuide | undefined {
