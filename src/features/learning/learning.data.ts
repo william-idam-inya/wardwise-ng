@@ -1,0 +1,249 @@
+export type LearningQuestion = {
+  question: string;
+  options: string[];
+  answerIndex: number;
+  explanation: string;
+};
+
+export type ClinicalLearningGuide = {
+  id: string;
+  title: string;
+  discipline: string;
+  subtitle: string;
+  summary: string;
+  learningObjectives: string[];
+  historyPrompts: string[];
+  examinationPrompts: string[];
+  investigationsToConsider: string[];
+  escalationFeatures: string[];
+  keyPoints: string[];
+  questions: LearningQuestion[];
+  aliases: string[];
+  sources: Array<{ label: string; url: string; detail: string }>;
+  reviewedOn: string;
+  educationalNote: string;
+};
+
+export const offlineGuides: ClinicalLearningGuide[] = [
+  {
+    id: 'jaundice-assessment',
+    title: 'Approach to a patient with jaundice',
+    discipline: 'Medicine · Hepatology',
+    subtitle: 'History, examination and initial evaluation',
+    summary: 'Jaundice is yellow discoloration of the sclerae, skin and mucous membranes due to hyperbilirubinaemia. Establish the chronology, associated symptoms, relevant exposures and features suggesting hepatic dysfunction or biliary disease.',
+    learningObjectives: [
+      'Establish the onset and duration of jaundice and whether dark urine appeared earlier.',
+      'Explore stool colour, pruritus, steatorrhoea, abdominal pain, fever and systemic symptoms.',
+      'Identify history that may suggest haemolysis, hepatocellular disease or cholestasis.',
+      'Recognise red flags and choose initial investigations according to the clinical context.',
+    ],
+    historyPrompts: [
+      'Onset, duration and course of yellow discoloration: progressive, intermittent or recurrent.',
+      'Dark urine and its timing relative to jaundice; pale or clay-coloured stools.',
+      'Pruritus, steatorrhoea, fever, malaise, myalgia, nausea and vomiting.',
+      'Abdominal pain: site, onset, character, severity, duration, radiation and associated symptoms.',
+      'Weight loss, anorexia, easy bruising, bleeding, melaena or haematemesis.',
+      'Past hepatobiliary disease, gallstones, hepatitis, haemolytic disorders and biliary surgery.',
+      'Medication, herbal preparations, alcohol, recreational drugs, toxins and hepatitis exposure risks.',
+      'Vaccination against hepatitis and family history of recurrent jaundice or hereditary disease.',
+    ],
+    examinationPrompts: [
+      'General appearance, vital signs, fever, hypotension, tachycardia, lethargy and cachexia.',
+      'Inspect sclerae in natural light; assess skin for jaundice, excoriations, bruising and other signs.',
+      'Inspect abdomen for distension, scars, collateral veins, ascites or visible masses.',
+      'Assess the liver, spleen, tenderness, masses and ascites where appropriate.',
+      'Assess mental state and look for asterixis when hepatic dysfunction is suspected.',
+    ],
+    investigationsToConsider: [
+      'Total and direct bilirubin, aminotransferases and alkaline phosphatase.',
+      'Coagulation profile when hepatic insufficiency, bleeding or bruising is suspected.',
+      'Full blood count and haemolysis tests where increased bilirubin production is considered.',
+      'Hepatitis serology and other targeted tests guided by exposure history and examination.',
+      'Abdominal ultrasound is commonly used when cholestasis or biliary obstruction is suspected; further imaging depends on findings.',
+    ],
+    escalationFeatures: [
+      'Altered mental status or asterixis.',
+      'Evidence of significant coagulopathy or gastrointestinal bleeding.',
+      'Fever with marked, continuous right upper quadrant pain or systemic toxicity.',
+      'Hypotension, tachycardia or other evidence of haemodynamic compromise.',
+    ],
+    keyPoints: [
+      'Dark urine may precede visible jaundice in conjugated or mixed hyperbilirubinaemia.',
+      'Jaundice is a sign, not a diagnosis; consider increased bilirubin production, impaired hepatic handling and impaired bile flow.',
+      'Severity is suggested by hepatic dysfunction, encephalopathy and coagulopathy—not simply the intensity of yellow discoloration.',
+    ],
+    questions: [
+      {
+        question: 'Which history detail may indicate conjugated hyperbilirubinaemia before jaundice becomes visible?',
+        options: ['Dark urine', 'Joint pain alone', 'A remote surgical scar', 'An isolated headache'],
+        answerIndex: 0,
+        explanation: 'Conjugated bilirubin is water-soluble and can be excreted in urine, so dark urine may precede visible jaundice.',
+      },
+      {
+        question: 'Which finding is particularly concerning for severe hepatic dysfunction?',
+        options: ['Mild isolated pruritus', 'Asterixis with altered mental status', 'A normal appetite', 'A remote history of childhood fever'],
+        answerIndex: 1,
+        explanation: 'Encephalopathy, including mental-status change and asterixis, is a concerning feature that warrants urgent clinical assessment.',
+      },
+    ],
+    aliases: ['jaundice', 'yellow eyes', 'yellow skin', 'scleral icterus', 'hyperbilirubinaemia', 'hyperbilirubinemia'],
+    sources: [
+      {
+        label: 'Merck Manual Professional Edition — Jaundice',
+        url: 'https://www.merckmanuals.com/professional/hepatic-and-biliary-disorders/approach-to-the-patient-with-liver-disease/jaundice',
+        detail: 'Professional review covering history, examination, interpretation and testing.',
+      },
+    ],
+    reviewedOn: '31 October 2026',
+    educationalNote: 'This guide is an adult-focused educational overview. Paediatric jaundice, pregnancy and special populations require age- and context-specific guidance.',
+  },
+  {
+    id: 'uti-child-assessment',
+    title: 'Suspected urinary tract infection in a child',
+    discipline: 'Paediatrics',
+    subtitle: 'Symptoms, urine assessment and age-specific risk',
+    summary: 'The history helps determine whether urine testing is appropriate and whether a child may be seriously unwell. Use symptoms and signs together with clinical judgement; a single feature should not decide the diagnosis.',
+    learningObjectives: [
+      'Ask about urinary symptoms, fever, hydration and abdominal or loin symptoms.',
+      'Elicit previous confirmed UTI and relevant urinary tract history.',
+      'Recognise the urgency of suspected UTI in babies younger than 3 months.',
+      'Understand that sample collection and testing strategy vary with age and clinical risk.',
+    ],
+    historyPrompts: [
+      'Dysuria, frequency, urgency where age-appropriate, new bedwetting or altered voiding pattern.',
+      'Urine appearance or odour: cloudy, dark, malodorous urine or visible blood.',
+      'Fever, shivering, reduced fluid intake, vomiting, abdominal pain, loin pain or suprapubic discomfort.',
+      'Previous confirmed UTI, recurrent fever of uncertain origin and previous investigations.',
+      'Poor urine flow, constipation, dysfunctional voiding or known antenatal renal/urinary abnormality.',
+      'Family history of vesicoureteral reflux or renal disease.',
+      'General condition, feeding, activity and hydration using age-appropriate questions.',
+    ],
+    examinationPrompts: [
+      'Assess general appearance, activity, hydration and level of illness.',
+      'Record temperature, heart rate, respiratory rate, perfusion and other age-appropriate observations.',
+      'Assess the abdomen for tenderness, palpable bladder or mass where appropriate.',
+      'Assess loin tenderness and relevant external/genital findings with consent, privacy and chaperone practice.',
+      'Consider alternative sources of fever; do not assume every febrile child has a UTI.',
+    ],
+    investigationsToConsider: [
+      'Urine testing is guided by symptoms, signs, age and clinical judgement.',
+      'Collect urine before antibiotics when feasible; do not delay urgent care in a seriously ill child because a sample is difficult to obtain.',
+      'Use clean-catch collection wherever possible; other methods depend on the child and setting.',
+      'For suspected UTI in a baby younger than 3 months, NICE recommends paediatric specialist referral and urgent urine microscopy and culture.',
+      'In children aged 3 years and over, NICE provides a dipstick strategy; interpret results in the context of symptoms, risk and the guideline.',
+    ],
+    escalationFeatures: [
+      'Suspected UTI in a baby younger than 3 months: urgent paediatric specialist referral.',
+      'High risk of serious illness, suspected sepsis, poor perfusion or marked systemic illness.',
+      'Poor urine flow, an abdominal/bladder mass, raised creatinine or known urinary tract abnormality.',
+      'Failure to improve as expected or diagnostic uncertainty in a child who remains unwell.',
+    ],
+    keyPoints: [
+      'NICE NG224 lists dysuria, frequency, new bedwetting, malodorous/dark/cloudy urine, haematuria, reduced fluid intake, fever, shivering, abdominal pain and loin/suprapubic tenderness among features that can increase UTI likelihood.',
+      'A single symptom or sign in isolation should not determine whether urine testing is needed.',
+      'NICE recommends referral of babies under 3 months with suspected UTI to paediatric specialist care, with urgent urine microscopy and culture.',
+    ],
+    questions: [
+      {
+        question: 'A 6-week-old baby is suspected to have a UTI. What is the recommended next step in NICE NG224?',
+        options: ['Manage as an uncomplicated older-child presentation', 'Refer urgently to paediatric specialist care', 'Wait one week before collecting urine', 'Use one symptom to confirm UTI'],
+        answerIndex: 1,
+        explanation: 'NICE NG224 recommends referral of babies under 3 months with suspected UTI to paediatric specialist care and urgent urine microscopy and culture.',
+      },
+      {
+        question: 'How should cloudy urine alone be used when considering UTI?',
+        options: ['It confirms UTI by itself', 'It excludes UTI by itself', 'It contributes to the overall assessment but should not decide alone', 'It makes examination unnecessary'],
+        answerIndex: 2,
+        explanation: 'NICE advises that a single symptom or sign in isolation should not necessarily determine whether urine testing is needed.',
+      },
+    ],
+    aliases: ['uti', 'urinary tract infection', 'child with dysuria', 'paediatric uti', 'pediatric uti', 'urine infection in child'],
+    sources: [
+      {
+        label: 'NICE NG224 — Urinary tract infection in under 16s',
+        url: 'https://www.nice.org.uk/guidance/ng224/chapter/Recommendations',
+        detail: 'Published 27 July 2022; the recommendations page includes a November 2025 link update.',
+      },
+    ],
+    reviewedOn: '31 October 2026',
+    educationalNote: 'This guide summarises NICE NG224. Follow current Nigerian/local paediatric protocols and senior clinical guidance; do not transfer a UK guideline into practice without considering local policy.',
+  },
+  {
+    id: 'acute-abdominal-pain',
+    title: 'Approach to acute abdominal pain',
+    discipline: 'Surgery · Emergency Medicine',
+    subtitle: 'Focused pain history, examination and early risk assessment',
+    summary: 'Acute abdominal pain requires systematic history-taking and careful examination. Establish illness severity first and identify features suggesting peritoneal irritation or impaired perfusion.',
+    learningObjectives: [
+      'Characterise pain by site, onset, progression, severity, radiation and associated symptoms.',
+      'Recognise the importance of general appearance, vital signs and peripheral perfusion.',
+      'Use a systematic abdominal examination sequence.',
+      'Identify features warranting urgent senior review.',
+    ],
+    historyPrompts: [
+      'Site and onset: where pain began, sudden or gradual onset and what the patient was doing.',
+      'Course and progression: constant or intermittent, worsening or improving, pattern and duration.',
+      'Character: sharp, dull, cramping, burning or the patient’s own description.',
+      'Radiation, severity, aggravating and relieving factors.',
+      'Associated vomiting, bowel habit change, distension, fever, urinary symptoms, bleeding or inability to pass stool/flatus.',
+      'Previous similar episodes, abdominal surgery, medical history, medication and possible pregnancy where applicable.',
+    ],
+    examinationPrompts: [
+      'Assess general appearance, consciousness, blood pressure, pulse and peripheral perfusion.',
+      'Examine the abdomen systematically: inspection, auscultation, percussion and palpation.',
+      'Begin palpation gently and away from the area of greatest pain.',
+      'Assess focal tenderness, involuntary guarding, rigidity, rebound and masses.',
+      'Consider rectal or pelvic examination only when clinically indicated, appropriate, consented and performed by a qualified clinician.',
+    ],
+    investigationsToConsider: [
+      'Choose tests according to history, examination, age, pregnancy possibility and suspected pathology.',
+      'Laboratory tests and imaging may be required; there is no single panel appropriate for every patient.',
+      'Choose imaging modality and urgency according to the clinical question and local pathway.',
+      'Do not delay emergency senior review or resuscitation priorities while completing routine clerking.',
+    ],
+    escalationFeatures: [
+      'Haemodynamic instability, poor peripheral perfusion, altered consciousness or toxic appearance.',
+      'Involuntary guarding, rigidity or rebound tenderness suggesting peritoneal irritation.',
+      'Severe or rapidly worsening pain, especially with systemic features.',
+      'Significant gastrointestinal bleeding, persistent vomiting with deterioration or a concerning abdominal mass.',
+    ],
+    keyPoints: [
+      'Merck describes the abdominal examination sequence as inspection, auscultation, percussion and palpation.',
+      'Guarding, rigidity and rebound are features suggesting peritoneal irritation.',
+      'In seriously ill patients, evaluation and urgent management may need to proceed simultaneously with early surgical consultation.',
+    ],
+    questions: [
+      {
+        question: 'Which abdominal examination sequence is described in the Merck Manual Professional Edition?',
+        options: ['Palpation, inspection, percussion, auscultation', 'Inspection, auscultation, percussion, palpation', 'Auscultation, palpation, inspection, percussion', 'Percussion, palpation, auscultation, inspection'],
+        answerIndex: 1,
+        explanation: 'The referenced sequence is inspection, auscultation, percussion and palpation.',
+      },
+      {
+        question: 'Which combination is concerning for peritoneal irritation?',
+        options: ['Mild nausea alone', 'Involuntary guarding, rigidity and rebound', 'Normal appetite and no tenderness', 'An isolated headache'],
+        answerIndex: 1,
+        explanation: 'Guarding, rigidity and rebound are clinical findings associated with peritoneal irritation.',
+      },
+    ],
+    aliases: ['acute abdomen', 'abdominal pain', 'acute abdominal pain', 'abdominal examination', 'acute surgical abdomen'],
+    sources: [
+      {
+        label: 'Merck Manual Professional Edition — Acute Abdominal Pain',
+        url: 'https://www.merckmanuals.com/professional/gastrointestinal-disorders/acute-abdomen-and-surgical-gastroenterology/acute-abdominal-pain',
+        detail: 'Professional reference on history, physical examination and initial assessment.',
+      },
+    ],
+    reviewedOn: '31 October 2026',
+    educationalNote: 'This is an assessment framework, not a diagnostic or treatment algorithm. Use local emergency pathways and senior clinical assessment where indicated.',
+  },
+];
+
+export function findOfflineGuide(topic: string): ClinicalLearningGuide | undefined {
+  const query = topic.trim().toLowerCase();
+  if (!query) return undefined;
+  return offlineGuides.find((guide) =>
+    [guide.title, guide.id, ...guide.aliases].some((value) => value.toLowerCase() === query)
+    || [guide.title, ...guide.aliases].some((value) => value.toLowerCase().includes(query) || query.includes(value.toLowerCase())),
+  );
+}
