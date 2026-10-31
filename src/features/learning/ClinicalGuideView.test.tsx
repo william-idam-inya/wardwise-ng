@@ -27,7 +27,7 @@ describe('ClinicalGuideView', () => {
   it('renders source-linked guide content and reveals a quiz explanation', () => {
     const guide = offlineGuides[0];
     render(<ClinicalGuideView guide={guide} onBack={() => undefined} />);
-    expect(screen.getByRole('heading', { name: guide.title })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: guide.title })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /focused history/i })).toBeInTheDocument();
     expect(screen.getByText(/differential framework/i)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /management principles/i })).toBeInTheDocument();
