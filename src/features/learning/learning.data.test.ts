@@ -7,6 +7,7 @@ describe('offline clinical learning content', () => {
     expect(findOfflineGuide('Suspected UTI in a child')?.id).toBe('uti-child-assessment');
     expect(findOfflineGuide('acute abdominal pain')?.id).toBe('acute-abdominal-pain');
     expect(findOfflineGuide('appendicitis')?.id).toBe('appendicitis-assessment');
+    expect(findOfflineGuide('PUV')?.id).toBe('posterior-urethral-valves');
   });
 
   it('includes secure references and valid answer indices in all guides', () => {
@@ -21,6 +22,13 @@ describe('offline clinical learning content', () => {
         expect(question.answerIndex).toBeLessThan(question.options.length);
       }
     }
+  });
+
+  it('preserves the key PUV neonatal assessment and lifelong follow-up principles', () => {
+    const guide = findOfflineGuide('posterior urethral valves')!;
+    expect(guide.investigationsToConsider.join(' ')).toMatch(/VCUG|voiding cystourethrography/i);
+    expect(guide.escalationFeatures.join(' ')).toMatch(/oliguria|anuria/i);
+    expect(guide.keyPoints.join(' ')).toMatch(/lifelong monitoring/i);
   });
 
   it('preserves the NICE referral warning for suspected UTI in babies under 3 months', () => {
