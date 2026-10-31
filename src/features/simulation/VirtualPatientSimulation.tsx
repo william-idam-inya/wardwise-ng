@@ -45,7 +45,7 @@ export function VirtualPatientSimulation({ onBack }: Props) {
       <div className="surface-card simulation-chat">
         <div className="simulation-chat-header"><span><span className="simulation-avatar">P</span><span><b>Fictional patient</b><small>Scenario conversation</small></span></span><span className="neutral-pill">{turns.filter((turn)=>turn.speaker==='learner').length} questions asked</span></div>
         <div className="simulation-transcript" aria-live="polite">{turns.map((turn,index)=><div className={'simulation-turn simulation-turn--'+turn.speaker} key={index}><small>{turn.speaker==='learner'?'You':'Patient'}</small><p>{turn.message}</p></div>)}</div>
-        {!finished ? <form className="simulation-compose" onSubmit={(event)=>{event.preventDefault();submitQuestion();}}>
+        {!finished ? <form className="simulation-compose" aria-label="Ask the fictional patient a question" onSubmit={(event)=>{event.preventDefault();submitQuestion();}}>
           <label htmlFor="simulation-question">Ask the patient a question</label>
           <div><input id="simulation-question" value={question} onChange={(event)=>setQuestion(event.target.value)} placeholder="e.g. When did the pain begin?" autoComplete="off"/><button className="btn btn-primary btn-small" type="submit" disabled={!question.trim()}><Send size={14}/> Ask</button></div>
           <small>Ask one question at a time. The patient answers only from the selected fictional scenario.</small>
