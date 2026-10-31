@@ -20,10 +20,10 @@ Use synthetic or properly de-identified study cases only until privacy and insti
 
 The following migrations have been applied to the WardWise project:
 
-1. `20261030000000_create_profiles.sql`
-2. `20261030010000_create_clinical_cases.sql`
-3. `20261031010000_create_simulation_bookmarks_audit.sql`
-4. `20261031101500_revoke_service_role_from_profiles.sql`
+1. `20261031095500_create_profiles.sql`
+2. `20261031095503_create_clinical_cases.sql`
+3. `20261031095507_create_simulation_bookmarks_audit.sql`
+4. `20261031095851_revoke_service_role_from_profiles.sql`
 
 The six public tables now present are:
 
