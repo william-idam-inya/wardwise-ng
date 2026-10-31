@@ -1,0 +1,28 @@
+import { describe, expect, it } from 'vitest';
+import { findOfflineGuide, offlineGuides } from './learning.data';
+
+describe('offline clinical learning content', () => {
+  it('finds the jaundice, paediatric UTI and acute abdominal pain guides', () => {
+    expect(findOfflineGuide('jaundice evaluation')?.id).toBe('jaundice-assessment');
+    expect(findOfflineGuide('Suspected UTI in a child')?.id).toBe('uti-child-assessment');
+    expect(findOfflineGuide('acute abdominal pain')?.id).toBe('acute-abdominal-pain');
+  });
+
+  it('includes secure references and valid answer indices in all guides', () => {
+    for (const guide of offlineGuides) {
+      expect(guide.sources.length).toBeGreaterThan(0);
+      expect(guide.sources.every((source) => source.url.startsWith('https://'))).toBe(true);
+      expect(guide.questions.length).toBeGreaterThan(0);
+      for (const question of guide.questions) {
+        expect(question.answerIndex).toBeGreaterThanOrEqual(0);
+        expect(question.answerIndex).toBeLessThan(question.options.length);
+      }
+    }
+  });
+
+  it('preserves the NICE referral warning for suspected UTI in babies under 3 months', () => {
+    const guide = findOfflineGuide('uti')!;
+    expect(guide.escalationFeatures.join(' ')).toMatch(/younger than 3 months/i);
+    expect(guide.keyPoints.join(' ')).toMatch(/single symptom or sign in isolation/i);
+  });
+});
