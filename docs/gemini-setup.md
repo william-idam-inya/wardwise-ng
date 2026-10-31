@@ -10,7 +10,7 @@ Function URL:
 
 `https://ooutidbssimzvvgkinek.supabase.co/functions/v1/clinical-assistant`
 
-The deployed function is not yet AI-ready: the private `GEMINI_API_KEY` and exact permitted frontend origins still need to be configured as Supabase Edge Function secrets. Requests without the Gemini key return a controlled 503 response.
+The deployed function is not yet AI-ready: the private `GEMINI_API_KEY` must be added as a Supabase Edge Function secret. The current localhost and WardWise Cloudflare Pages origins are already allowlisted in the function code; `APP_ALLOWED_ORIGINS` is only needed when introducing an additional origin, such as a future custom domain. Requests without the Gemini key return a controlled 503 response.
 
 ## Request flow
 
