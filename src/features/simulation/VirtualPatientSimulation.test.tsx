@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { VirtualPatientSimulation } from './VirtualPatientSimulation';
 import { listSimulationSessions, loadSimulationSession, saveSimulationSession } from './simulation.service';
 
@@ -8,6 +8,8 @@ vi.mock('./simulation.service', () => ({
   loadSimulationSession: vi.fn(),
   saveSimulationSession: vi.fn(),
 }));
+
+afterEach(() => cleanup());
 
 beforeEach(() => {
   vi.clearAllMocks();
