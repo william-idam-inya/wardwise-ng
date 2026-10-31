@@ -434,6 +434,113 @@ export const offlineGuides: ClinicalLearningGuide[] = [
     reviewedOn: '31 October 2026',
     educationalNote: 'This is a student learning framework, not a diagnostic or treatment protocol. Follow current Nigerian/institutional pathways and the supervising surgical team; WSES and SAGES recommendations must be adapted to local resources and patient factors.',
   },
+  {
+    id: 'posterior-urethral-valves',
+    title: 'Approach to suspected posterior urethral valves',
+    discipline: 'Surgery · Paediatric Urology',
+    subtitle: 'Neonatal presentation, assessment, VCUG and specialist management principles',
+    summary: 'Posterior urethral valves (PUV) are congenital obstructing urethral membranes in boys and are an important cause of congenital lower urinary tract obstruction. The obstruction may affect bladder function, upper urinary tract drainage and long-term renal function. Suspected neonatal obstruction requires urgent paediatric urology assessment.',
+    learningObjectives: [
+      'Recognise antenatal and postnatal features that raise suspicion of PUV.',
+      'Elicit urinary stream, urine output, infection, feeding and renal-related symptoms.',
+      'Understand the role of ultrasound, renal biochemistry and voiding cystourethrography (VCUG).',
+      'Describe the principles of initial bladder drainage, stabilisation, valve ablation and lifelong follow-up.',
+    ],
+    historyPrompts: [
+      'Antenatal ultrasound findings: enlarged or persistently distended bladder, bilateral hydroureteronephrosis, thick-walled bladder, increased renal echogenicity or oligohydramnios.',
+      'Pregnancy and birth history, gestational age, delivery, neonatal admission and any prenatal specialist assessment.',
+      'Urinary stream from birth: weak, thin, intermittent or prolonged stream; straining, dribbling, poor wet-nappy output or episodes of retention.',
+      'Urine output and wet nappies: frequency, volume where measured, recent reduction or absence of urine.',
+      'Symptoms of urinary infection or systemic illness: fever, lethargy, poor feeding, vomiting, irritability or previous febrile UTI.',
+      'Abdominal distension, palpable bladder previously noted, failure to thrive or poor weight gain.',
+      'Previous catheterisation, urinary diversion, VCUG, cystoscopy, valve ablation or other urological procedures.',
+      'Relevant associated congenital findings and family history of congenital urinary tract abnormalities.',
+    ],
+    examinationPrompts: [
+      'Assess neonatal/infant general condition, temperature, heart rate, respiratory status, perfusion, hydration and weight.',
+      'Assess urine output and fluid balance; review the clinical record for oliguria or anuria.',
+      'Inspect and palpate the abdomen for a distended bladder, abdominal mass or ascites.',
+      'Examine the external genitalia and document both testes and any associated genital or inguinal abnormality.',
+      'Assess for oedema, signs of renal dysfunction, hypertension where measurable, and respiratory compromise that may accompany severe antenatal oligohydramnios.',
+    ],
+    investigationsToConsider: [
+      'Renal and bladder ultrasound to assess renal parenchyma, hydronephrosis/hydroureter, bladder wall and bladder distension; ultrasound findings raise suspicion but do not replace urethral imaging for confirmation.',
+      'Serum creatinine, urea and electrolytes, monitored closely in the first postnatal days and interpreted as a trend rather than a single isolated value.',
+      'Urinalysis and urine culture when infection is suspected, using an age-appropriate collection method.',
+      'Voiding cystourethrography (VCUG/MCUG) with lateral urethral views during the voiding phase and without a catheter remaining in the urethra during those views; this is recommended by the EAU when PUV is suspected.',
+      'Renal nuclear imaging such as DMSA or MAG3 may be used by the specialist team to assess differential renal function or scarring when indicated.',
+      'Further functional assessment, including urodynamics, may be required during follow-up when bladder dysfunction is suspected.',
+    ],
+    differentialFrameworks: [
+      {
+        diagnosisGroup: 'Other congenital lower urinary tract obstruction',
+        featuresToExplore: ['Anterior urethral valve or diverticulum', 'Urethral atresia or stenosis', 'Other congenital outlet abnormalities'],
+        caution: 'These conditions can overlap in antenatal or postnatal imaging appearances; anatomical definition and specialist assessment are important.',
+      },
+      {
+        diagnosisGroup: 'Other causes of poor urinary stream or retention',
+        featuresToExplore: ['Neurogenic bladder or spinal dysraphism', 'Meatal or urethral narrowing', 'Severe dysfunctional bladder emptying'],
+        caution: 'A poor stream alone is not diagnostic of PUV. Consider the age, antenatal findings, examination and imaging.',
+      },
+      {
+        diagnosisGroup: 'Associated urinary tract pathology',
+        featuresToExplore: ['Vesicoureteric reflux', 'Renal dysplasia or parenchymal impairment', 'Upper tract dilatation'],
+        caution: 'Associated findings may affect renal prognosis and follow-up but do not independently establish the valve diagnosis.',
+      },
+    ],
+    managementPrinciples: [
+      'A newborn with suspected infravesical obstruction needs urgent paediatric urology/neonatal assessment. The EAU recommends prompt bladder drainage, commonly by transurethral catheterisation or suprapubic drainage as clinically appropriate.',
+      'Stabilisation includes close monitoring of renal function, electrolytes, fluid balance, urine output, infection and respiratory status, with paediatric nephrology involvement when indicated.',
+      'After bladder drainage and stabilisation, endoscopic valve ablation is generally attempted when the urethra and available equipment permit. The procedure and timing are specialist decisions.',
+      'If the child is too small or not sufficiently stable for endoscopic ablation, prolonged bladder drainage or a urinary diversion may be considered by the paediatric urology team.',
+      'The team should demonstrate improvement after initial treatment and arrange appropriate imaging, renal and bladder function review.',
+      'Long-term and lifelong monitoring is required because chronic kidney disease and bladder dysfunction can develop despite treatment.',
+    ],
+    escalationFeatures: [
+      'Newborn with suspected infravesical obstruction, markedly poor stream, retention or a distended bladder.',
+      'Oliguria or anuria, rising creatinine, significant electrolyte disturbance or suspected acute kidney injury.',
+      'Fever, lethargy, poor feeding, poor perfusion or other features concerning for neonatal sepsis/urosepsis.',
+      'Respiratory distress or history of severe oligohydramnios suggesting possible pulmonary hypoplasia.',
+      'Worsening hydronephrosis, recurrent febrile UTI or failure to improve after bladder drainage.',
+    ],
+    keyPoints: [
+      'PUV is a potentially life-threatening congenital urinary tract anomaly and an important cause of congenital lower urinary tract obstruction in boys.',
+      'Antenatal clues include a distended or thick-walled bladder, upper tract dilatation and oligohydramnios; these findings raise suspicion but are not by themselves definitive.',
+      'The EAU recommends VCUG for suspected PUV, including lateral views of the urethra during voiding without a catheter in situ.',
+      'The EAU recommends bladder drainage in newborns with suspected infravesical obstruction, followed by stabilisation and an attempt at endoscopic valve ablation when feasible.',
+      'Renal function and bladder function require long-term, lifelong monitoring.',
+    ],
+    questions: [
+      {
+        question: 'Which imaging study is specifically recommended by the EAU when posterior urethral valves are suspected?',
+        options: ['Plain abdominal radiograph', 'Voiding cystourethrography with lateral urethral views during voiding', 'Routine CT abdomen for every neonate', 'Intravenous urography as the first confirmatory test'],
+        answerIndex: 1,
+        explanation: 'The EAU recommends VCUG. Lateral views of the urethra during the voiding phase, without a catheter in situ for those views, help outline the posterior urethral anatomy.',
+      },
+      {
+        question: 'A newborn has a poor urinary stream, a distended bladder and antenatal bilateral urinary tract dilatation. What is the key immediate management principle?',
+        options: ['Wait for outpatient review after several weeks', 'Urgent specialist assessment and bladder drainage', 'Perform definitive valve ablation before stabilisation', 'Restrict all fluids without monitoring'],
+        answerIndex: 1,
+        explanation: 'Suspected infravesical obstruction in a newborn requires urgent assessment and bladder drainage. Stabilisation and renal/electrolyte monitoring precede definitive endoscopic treatment when feasible.',
+      },
+      {
+        question: 'Which statement about follow-up after treatment of PUV is most accurate?',
+        options: ['Follow-up can stop once the stream improves', 'Only repeat urine culture is required', 'Lifelong renal and bladder function monitoring is required', 'A normal early ultrasound excludes future bladder dysfunction'],
+        answerIndex: 2,
+        explanation: 'Renal impairment and bladder dysfunction may persist or emerge over time. EAU guidance emphasises lifelong monitoring of renal and bladder function.',
+      },
+    ],
+    aliases: ['posterior urethral valves', 'puv', 'valves in the posterior urethra', 'congenital lower urinary tract obstruction', 'cluto', 'poor urinary stream in a male neonate'],
+    sources: [
+      {
+        label: 'EAU Guidelines on Paediatric Urology 2026 — Congenital Lower Urinary Tract Obstruction',
+        url: 'https://uroweb.org/guidelines/paediatric-urology/chapter/congenital-lower-urinary-tract-obstruction',
+        detail: '2026 edition; sections on PUV diagnosis, postnatal management, follow-up and recommendations.',
+      },
+    ],
+    reviewedOn: '31 October 2026',
+    educationalNote: 'This is an educational summary of EAU guidance, not a neonatal emergency protocol. A suspected PUV requires urgent assessment by the paediatric/neonatal and urology teams. Follow current local Nigerian protocols and the treating specialist team.',
+  },
 ];
 
 export function findOfflineGuide(topic: string): ClinicalLearningGuide | undefined {
