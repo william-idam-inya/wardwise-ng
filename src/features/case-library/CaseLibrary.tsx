@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Archive, FileHeart, FolderSearch, Pencil, RefreshCw, Search, ShieldCheck, Trash2 } from 'lucide-react';
+import { Archive, Copy, FileHeart, FolderSearch, Pencil, RefreshCw, Search, ShieldCheck, Trash2 } from 'lucide-react';
 import { ProcessingIndicator } from '../../components/ProcessingIndicator';
-import { archiveClinicalCase, deleteClinicalCase, listClinicalCases } from './case.service';
+import { archiveClinicalCase, deleteClinicalCase, duplicateClinicalCase, listClinicalCases } from './case.service';
 import type { ClinicalCaseSummary } from './case.types';
 
 type Props = {
@@ -24,6 +24,7 @@ export function CaseLibrary({ userId, refreshKey = 0, onOpenCase, onStartNew }: 
   const [query, setQuery] = useState('');
   const [showArchived, setShowArchived] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const reload = useCallback(async () => {
     setLoading(true);
@@ -61,6 +62,21 @@ export function CaseLibrary({ userId, refreshKey = 0, onOpenCase, onStartNew }: 
     }
   }
 
+  async function duplicate(caseId: string) {
+    setWorkingId(caseId);
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const copy = await duplicateClinicalCase(caseId, userId);
+      setSuccessMessage('Created a separate draft: ' + copy.title);
+      await reload();
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'The case could not be duplicated.');
+    } finally {
+      setWorkingId(null);
+    }
+  }
+
   async function remove(caseId: string) {
     if (!window.confirm('Delete this case and its clerking session permanently?')) return;
     setWorkingId(caseId);
@@ -87,6 +103,7 @@ export function CaseLibrary({ userId, refreshKey = 0, onOpenCase, onStartNew }: 
         <button className="icon-btn" type="button" onClick={()=>void reload()} aria-label="Refresh case library" disabled={loading}><RefreshCw size={16}/></button>
       </div>
       {errorMessage ? <div className="auth-error" role="alert">{errorMessage}</div> : null}
+      {successMessage ? <div className="auth-banner" role="status">{successMessage}</div> : null}
       {loading ? <div className="case-library-loading"><ProcessingIndicator label="Loading your case library" detail="Waiting for the database to return your records."/></div> :
         visibleCases.length ? <div className="case-list">{visibleCases.map((item)=>(
           <article className="case-list-item" key={item.id}>
@@ -95,6 +112,7 @@ export function CaseLibrary({ userId, refreshKey = 0, onOpenCase, onStartNew }: 
             <span className={'case-status case-status--'+item.status}>{item.status}</span>
             <div className="case-list-actions">
               <button className="btn btn-secondary btn-small" type="button" onClick={()=>onOpenCase(item.id)}><Pencil size={13}/> Open</button>
+              <button className="icon-btn" type="button" disabled={workingId===item.id} aria-label={'Duplicate '+item.title} onClick={()=>void duplicate(item.id)}><Copy size={15}/></button>
               {item.status !== 'archived' ? <button className="icon-btn" type="button" disabled={workingId===item.id} aria-label={'Archive '+item.title} onClick={()=>void archive(item.id)}><Archive size={16}/></button> : null}
               <button className="icon-btn danger-icon" type="button" disabled={workingId===item.id} aria-label={'Delete '+item.title} onClick={()=>void remove(item.id)}><Trash2 size={16}/></button>
             </div>
