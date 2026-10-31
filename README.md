@@ -18,6 +18,8 @@ WardWise NG is an educational platform for medical and surgery students, especia
 - **Milestone 3 — Guided clerking:** a 13-stage form covers separate complaint histories, ROS, past/family/social history, examination, investigations, assessment, plan and note review. The draft records whether each ROS system was actually reviewed and does not transform unanswered items into negatives.
 - **Milestone 4 — Case Library:** private case and session tables, RLS migrations, save/reopen/edit/archive/delete services, and recent-case shortcuts are implemented in code.
 - **Milestone 5 — Gemini question facilitator:** an authenticated Supabase Edge Function, stage-aware context builder, JSON-schema response validation, request-size limits, server-side API key use, and a one-question action in the clerking UI are implemented in code. Deployment, model compatibility tests, durable quotas and clinician-led safety evaluation remain pending.
+- **Milestone 6 — Clinical Tutor:** three source-linked offline guides (jaundice, paediatric UTI and acute abdominal pain), focused history/examination/investigation prompts, escalation features and interactive knowledge checks are implemented. Independent clinician review and further guide coverage remain pending.
+- **Milestone 7 — Virtual Patient Simulation:** two scripted fictional scenarios, explicit examination/investigation disclosure on request, unknown-detail fallback, domain coverage and a post-interview debrief are implemented. The rubric is formative and not a validated OSCE score.
 - **Backend connection:** not yet complete. The connected Supabase account currently has the existing ClinClerk NG project only. WardWise must use a new, separate Supabase project. The migrations have not been applied and live auth/database tests have not yet run.
 - The app keeps the private workspace locked when Supabase public configuration is missing. It does not silently fall back to demo/private data. Gemini credentials are not included in browser code.
 
@@ -69,8 +71,8 @@ The current profile stores name, optional sex, optional age in years, study leve
 - [ ] Milestone 3 — AI follow-up questions, clinical validation and live note preview (13-stage structured workflow committed; Gemini prompt evaluation pending)
 - [x] Milestone 4 — case persistence code, edit/reopen/archive/delete (remote RLS tests and export pending)
 - [ ] Milestone 5 — deploy/test Gemini Edge Function, implement durable quotas and complete clinical safety evaluation (function and frontend integration code committed)
-- [ ] Milestone 6 — Clinical Tutor and expanded catalogue
-- [ ] Milestone 7 — virtual patient and examiner rubric
+- [ ] Milestone 6 — independent clinical review and expand source-linked Clinical Tutor coverage (three offline starter guides implemented)
+- [ ] Milestone 7 — clinician-review and expand the Virtual Patient Simulation library/rubric (two scripted scenarios implemented)
 - [ ] Milestone 8 — accessibility, security, end-to-end tests and release
 
 Review each milestone with real test results before proceeding. Do not claim deployment, database isolation or clinical validation until those checks pass.
