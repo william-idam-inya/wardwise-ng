@@ -12,7 +12,7 @@ describe('PrivacyNotice', () => {
     render(<PrivacyNotice />);
     expect(screen.getByText(/development notice — not a final privacy policy/i)).toBeInTheDocument();
     expect(screen.getByText(/separate WardWise Supabase project has not yet been created/i)).toBeInTheDocument();
-    expect(screen.getByText(/account profile deletion are not implemented/i)).toBeInTheDocument();
+    expect(screen.getByText(/data-subject request workflow are not implemented/i)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /read the nigeria data protection act/i })).toHaveAttribute('href', 'https://ndpc.gov.ng/ndp-act-2023/');
   });
 
