@@ -320,6 +320,121 @@ export const offlineGuides: ClinicalLearningGuide[] = [
     reviewedOn: '31 October 2026',
     educationalNote: 'This is an assessment framework, not a diagnostic or treatment algorithm. Use local emergency pathways and senior clinical assessment where indicated.',
   },
+
+  {
+    id: 'appendicitis-assessment',
+    title: 'Approach to suspected acute appendicitis',
+    discipline: 'Surgery · General Surgery',
+    subtitle: 'History, examination, investigation and early surgical assessment',
+    summary: 'Acute appendicitis is a common surgical emergency. A typical history may include pain that begins centrally and later localises to the right lower quadrant, but presentations vary. Clinical risk assessment combined with appropriate imaging improves diagnostic accuracy; no single symptom, sign or blood test confirms the diagnosis.',
+    learningObjectives: [
+      'Elicit the chronology and possible migration of abdominal pain, associated symptoms and relevant alternative causes.',
+      'Recognise examination features that may suggest localised or generalised peritoneal irritation.',
+      'Understand the role and limitations of clinical risk scores, laboratory tests and imaging.',
+      'Identify situations requiring urgent senior surgical assessment.',
+    ],
+    historyPrompts: [
+      'Pain onset, initial site, subsequent site, course, severity, character, radiation and aggravating or relieving factors.',
+      'Anorexia, nausea, vomiting and fever; clarify the sequence of pain and vomiting rather than assuming it.',
+      'Bowel symptoms including diarrhoea, constipation, abdominal distension and ability to pass flatus.',
+      'Urinary symptoms, loin-to-groin pain and previous urinary stones or infection.',
+      'Previous similar episodes, abdominal surgery, relevant medical conditions and immunosuppression.',
+      'Medication, allergy and recent treatment history.',
+      'Menstrual history and pregnancy possibility where biologically relevant; ask about vaginal bleeding or discharge where appropriate.',
+      'Scrotal or testicular pain in patients with testes, because torsion can present with lower abdominal pain.',
+    ],
+    examinationPrompts: [
+      'Assess general appearance, vital signs, hydration, perfusion and evidence of systemic illness.',
+      'Inspect the abdomen and examine systematically, documenting the exact site and extent of tenderness.',
+      'Assess for involuntary guarding, rebound or rigidity; distinguish these from voluntary tensing where possible.',
+      'Consider hernial orifices and genital examination when clinically indicated, with consent, privacy and chaperone practice.',
+      'In a patient who may be pregnant, consider the relevant pelvic and obstetric differential and urgent referral pathway.',
+      'Repeat examination when symptoms evolve or the initial findings are equivocal; do not treat one sign as diagnostic.',
+    ],
+    investigationsToConsider: [
+      'Full blood count and inflammatory markers may support assessment but are not diagnostic in isolation.',
+      'Urinalysis can help identify urinary alternatives; interpret findings in the clinical context.',
+      'Pregnancy testing where biologically relevant and appropriate.',
+      'Use an appropriate clinical risk score as an adjunct to, not a replacement for, clinical assessment.',
+      'Ultrasound is a reasonable first-line imaging option in children and in settings where avoiding ionising radiation is important; CT or MRI may be required when the diagnosis remains uncertain or according to local pathways.',
+      'Select imaging according to age, pregnancy status, risk, availability and local radiology/surgical guidance.',
+    ],
+    differentialFrameworks: [
+      {
+        diagnosisGroup: 'Gastrointestinal and inflammatory alternatives',
+        featuresToExplore: ['Gastroenteritis: diarrhoea, vomiting, exposure and diffuse cramps', 'Mesenteric adenitis: often follows an upper respiratory infection and can mimic appendicitis', 'Crohn disease, Meckel diverticulitis or other bowel inflammation where relevant'],
+        caution: 'Symptoms overlap. Diarrhoea or vomiting does not by itself exclude appendicitis.',
+      },
+      {
+        diagnosisGroup: 'Urinary and renal alternatives',
+        featuresToExplore: ['Urinary tract infection: dysuria, frequency or systemic urinary symptoms', 'Ureteric colic: loin-to-groin pain and haematuria where present'],
+        caution: 'Urinalysis can support an alternative diagnosis, but an abnormal urine result should be interpreted alongside the abdominal examination.',
+      },
+      {
+        diagnosisGroup: 'Gynaecological and genital alternatives',
+        featuresToExplore: ['Ectopic pregnancy, ovarian torsion or pelvic inflammatory disease where biologically relevant', 'Testicular torsion in a patient with testes, particularly when there is scrotal or testicular pain'],
+        caution: 'These conditions may be time-critical. Ask relevant questions and arrange appropriate urgent assessment rather than anchoring on appendicitis.',
+      },
+    ],
+    managementPrinciples: [
+      'Assess stability first and escalate promptly if there is shock, sepsis, generalised peritonitis or clinical deterioration.',
+      'Use history, examination, risk stratification and imaging together to reduce diagnostic uncertainty and negative appendectomy.',
+      'Seek early senior surgical assessment when appendicitis is suspected or the patient is deteriorating.',
+      'Laparoscopic appendectomy remains a standard surgical approach; operative versus non-operative management requires patient-specific assessment and shared decision-making by the surgical team.',
+      'Antibiotic-only management is an option for selected patients with uncomplicated appendicitis in some guidelines, but recurrence, complications, access to follow-up and patient preferences matter.',
+      'The timing and type of intervention depend on whether disease is uncomplicated or complicated, the patient’s physiology and available local resources.',
+      'Do not prescribe or delay urgent care based on this educational guide; follow the current hospital protocol and supervising surgeon’s plan.',
+    ],
+    escalationFeatures: [
+      'Haemodynamic instability, shock, poor perfusion or suspected sepsis.',
+      'Generalised guarding, rigidity or other features of diffuse peritonitis.',
+      'Severe or rapidly worsening pain, persistent vomiting or systemic deterioration.',
+      'Possible ectopic pregnancy, ovarian torsion or testicular torsion.',
+      'Diagnostic uncertainty in a patient who remains unwell or has worsening serial examination findings.',
+    ],
+    keyPoints: [
+      'Pain migration to the right lower quadrant is a useful historical feature but is not present in every patient.',
+      'Clinical risk scores and imaging can improve diagnostic accuracy and reduce negative appendectomy rates.',
+      'Ultrasound is a reasonable first-line imaging option; CT and MRI may provide more definitive imaging when required.',
+      'The 2025 WSES Jerusalem guideline update emphasises population-specific decision-making and adaptation to local resources.',
+    ],
+    questions: [
+      {
+        question: 'According to the 2025 WSES Jerusalem guideline update, what combination improves diagnostic accuracy and can reduce negative appendectomy?',
+        options: ['A single symptom alone', 'Clinical risk scores combined with appropriate imaging', 'CRP alone', 'Routine antibiotics before assessment'],
+        answerIndex: 1,
+        explanation: 'The 2025 WSES guideline update identifies clinical risk scores and imaging together as improving diagnostic accuracy and reducing negative appendectomy rates.',
+      },
+      {
+        question: 'Which imaging option is reasonable as a first-line study, particularly when radiation avoidance matters?',
+        options: ['Ultrasound', 'Plain abdominal radiograph for every patient', 'No imaging is ever required', 'CT for every child'],
+        answerIndex: 0,
+        explanation: 'SAGES describes ultrasound as a reasonable first-line study because it is relatively low cost and avoids ionising radiation; CT and MRI are more definitive when needed.',
+      },
+      {
+        question: 'Which statement about antibiotic-only management is most accurate?',
+        options: ['It is suitable for every patient without review', 'It is never discussed in current guidelines', 'It may be considered for selected uncomplicated cases after surgical assessment and shared decision-making', 'It removes the need for follow-up'],
+        answerIndex: 2,
+        explanation: 'Current guidelines allow non-operative treatment in selected patients, but selection, recurrence, complications and follow-up must be considered by the clinical team.',
+      },
+    ],
+    aliases: ['appendicitis', 'acute appendicitis', 'suspected appendicitis', 'right iliac fossa pain', 'rif pain', 'right lower quadrant pain'],
+    sources: [
+      {
+        label: 'WSES — 2025 Edition of the Jerusalem Guidelines for Acute Appendicitis',
+        url: 'https://pubmed.ncbi.nlm.nih.gov/41604201/',
+        detail: 'Published online 28 January 2026; evidence review through May 2025, 35 GRADE-based recommendations.',
+      },
+      {
+        label: 'SAGES — Guideline for the Diagnosis and Treatment of Appendicitis',
+        url: 'https://www.sages.org/publications/guidelines/guideline-for-the-diagnosis-and-treatment-of-appendicitis/',
+        detail: 'Society guideline on imaging, operative and non-operative options and perioperative considerations.',
+      },
+    ],
+    reviewedOn: '31 October 2026',
+    educationalNote: 'This is a student learning framework, not a diagnostic or treatment protocol. Follow current Nigerian/institutional pathways and the supervising surgical team; WSES and SAGES recommendations must be adapted to local resources and patient factors.',
+  },
+  },
 ];
 
 export function findOfflineGuide(topic: string): ClinicalLearningGuide | undefined {
