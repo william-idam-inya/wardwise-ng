@@ -32,7 +32,7 @@ describe('ClinicalGuideView', () => {
     expect(screen.getAllByText(/differential framework/i).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('heading', { name: /management principles/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole('link', { name: /open source/i }).length).toBeGreaterThan(0);
-    fireEvent.click(screen.getByRole('button', { name: guide.questions[0].options[guide.questions[0].answerIndex] }));
+    fireEvent.click(screen.getAllByRole('button', { name: guide.questions[0].options[guide.questions[0].answerIndex] })[0]);
     expect(screen.getByText(/correct\./i)).toBeInTheDocument();
     expect(screen.getByText(guide.questions[0].explanation)).toBeInTheDocument();
   });
