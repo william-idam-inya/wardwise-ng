@@ -32,25 +32,25 @@ export function PrivacyNotice() {
     </div>
     <div className="privacy-development-alert" role="note">
       <AlertTriangle size={18}/>
-      <div><b>Development notice — not a final privacy policy</b><p>WardWise NG is still being configured. A separate WardWise Supabase project has not yet been created or connected. Do not enter identifiable patient information or real clinical records.</p></div>
+      <div><b>Development notice — not a final privacy policy</b><p>A dedicated WardWise Supabase project has been created and the initial database migrations are applied. Sign-in and email flows, two-account privacy isolation, live save journeys, AI secrets and clinical governance are still being verified. Do not enter identifiable patient information or real clinical records.</p></div>
     </div>
 
     <div className="privacy-information-grid">
       <article className="privacy-information-card">
         <span><LockKeyhole size={18}/></span><h3>Account and profile information</h3>
-        <p>The planned profile stores your name, optional sex and age in years, study level, institution and optional training site. It is intended to provide sign-in and personalise your learning workspace.</p>
+        <p>The WardWise database now has a private profile table for your name, optional sex and age in years, study level, institution and optional training site. Profile creation and editing require a working, signed-in account and are still subject to live authentication testing.</p>
       </article>
       <article className="privacy-information-card">
         <span><FileText size={18}/></span><h3>Cases and clerking drafts</h3>
-        <p>When the separate WardWise database is connected, saved cases will contain a non-identifying case label, specialty, setting, structured answers, a generated note and clerking-stage progress. Use synthetic or properly de-identified learning cases only.</p>
+        <p>Private case, clerking-session and simulation-session tables have been created. The app includes save, reopen and edit workflows, but full journeys have not yet been verified with real user accounts. Use synthetic or properly de-identified learning cases only.</p>
       </article>
       <article className="privacy-information-card">
         <span><ShieldCheck size={18}/></span><h3>Access and security</h3>
-        <p>The repository includes owner-specific row-level security policies for profile, case and session records. They have not yet been applied to a live WardWise database or tested with two separate accounts, so live isolation is not yet verified.</p>
+        <p>All six WardWise public tables have row-level security enabled and owner-specific policies are present. The database security advisor currently reports no findings. Isolation between two real accounts, account recovery and other browser-level security checks remain outstanding.</p>
       </article>
       <article className="privacy-information-card">
         <span><ExternalLink size={18}/></span><h3>Gemini and external processing</h3>
-        <p>When deployed, a learner action will send only the current clerking stage's limited context to a server-side Gemini function. The Gemini key is intended to remain on the server. The request uses store:false, but this does not mean zero provider-side processing or retention; applicable Google terms must be reviewed before release.</p>
+        <p>The authenticated Gemini Edge Function has been deployed with JWT verification. It will send only the current clerking stage's limited context after the server-side GEMINI_API_KEY and approved application origins are configured. The request uses store:false, but this does not mean zero provider-side processing or retention; applicable Google terms must be reviewed before release.</p>
       </article>
     </div>
 
