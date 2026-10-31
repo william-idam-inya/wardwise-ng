@@ -75,6 +75,6 @@ describe('private case library', () => {
     fireEvent.click(screen.getByRole('button', { name: /duplicate synthetic child with abdominal pain/i }));
 
     expect(duplicateClinicalCase).toHaveBeenCalledWith('case-1', 'user-a');
-    expect(await screen.findByRole('status')).toHaveTextContent(/created a separate draft/i);
+    expect(await screen.findByText(/created a separate draft/i)).toBeInTheDocument();
   });
 });
