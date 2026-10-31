@@ -4,7 +4,7 @@ This guide applies only to WardWise NG. The existing ClinClerk NG app and databa
 
 ## Deployment status
 
-The authenticated Supabase Edge Function `clinical-assistant` is deployed to project `ooutidbssimzvvgkinek` with JWT verification enabled.
+The authenticated Supabase Edge Function `clinical-assistant` is deployed to project `ooutidbssimzvvgkinek` with JWT verification enabled (deployment version 2).
 
 Function URL:
 
@@ -30,18 +30,14 @@ The function calls Google's Gemini Interactions API using JSON-schema constraine
 
 The API version defaults to stable `v1` via `GEMINI_API_VERSION`. The function caps output at 500 tokens.
 
-## Add the private secrets in Supabase Dashboard
+## Add the private secret in Supabase Dashboard
 
 1. Open [WardWise Edge Function Secrets](https://supabase.com/dashboard/project/ooutidbssimzvvgkinek/functions/secrets).
 2. Add `GEMINI_API_KEY` and paste the key you generated in Google AI Studio.
-3. Add `APP_ALLOWED_ORIGINS` with the exact origin(s) below. Separate multiple origins with semicolons; do not add URL paths or trailing slashes:
+3. Optionally set `GEMINI_MODEL` to `gemini-3.8-flash` and `GEMINI_API_VERSION` to `v1`. These are already the function defaults.
+4. Save the secret. Supabase Edge Functions read updated secrets without needing a redeployment.
 
-   `https://wardwise-ng.pages.dev;http://localhost:5173;http://127.0.0.1:5173`
-
-4. Optionally set `GEMINI_MODEL` to `gemini-3.8-flash` and `GEMINI_API_VERSION` to `v1`. These are already the function defaults.
-5. Save the secrets. Supabase Edge Functions read updated secrets without needing a redeployment.
-
-A branch-preview URL will be different from the production Pages URL. Add its exact origin to `APP_ALLOWED_ORIGINS` after the Cloudflare preview deployment is available, if you want AI requests to work from that preview.
+The function already allows localhost development origins, the stable `https://wardwise-ng.pages.dev` host and HTTPS preview subdomains belonging to this exact Cloudflare Pages project. For a future custom domain, add `APP_ALLOWED_ORIGINS` as a semicolon-separated list of exact origins without URL paths or trailing slashes.
 
 Never paste the Gemini key into this chat, GitHub, frontend source, a browser console, a `VITE_` variable or Cloudflare's public build variables. Only the Supabase Edge Function secret store should contain it.
 
