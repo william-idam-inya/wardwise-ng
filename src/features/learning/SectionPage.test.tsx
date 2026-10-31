@@ -22,6 +22,21 @@ describe('Clinical Tutor and learning catalogue', () => {
     expect(screen.getByRole('textbox', { name: /search learning catalogue/i })).toHaveValue('jaundice');
   });
 
+  it('groups surgery topics under specialties and finds appendicitis via a common presentation alias', () => {
+    render(<SectionPage section="learning-catalogue" onNavigate={vi.fn()} />);
+    fireEvent.change(screen.getByRole('textbox', { name: /search learning catalogue/i }), { target: { value: 'RIF pain' } });
+    expect(screen.getByRole('heading', { name: /general & gastrointestinal surgery/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /appendicitis/i })).toBeInTheDocument();
+  });
+
+  it('filters the catalogue by discipline and specialty name', () => {
+    render(<SectionPage section="learning-catalogue" onNavigate={vi.fn()} />);
+    fireEvent.change(screen.getByRole('textbox', { name: /search learning catalogue/i }), { target: { value: 'urology' } });
+    expect(screen.getByRole('heading', { name: /urology/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /hypospadias/i })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /cardiology/i })).not.toBeInTheDocument();
+  });
+
   it('labels catalogue topics without a detailed guide', () => {
     render(<SectionPage section="learning-catalogue" onNavigate={vi.fn()} />);
     fireEvent.change(screen.getByRole('textbox', { name: /search learning catalogue/i }), { target: { value: 'cardiology' } });
