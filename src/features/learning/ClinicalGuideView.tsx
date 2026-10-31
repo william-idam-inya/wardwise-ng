@@ -35,6 +35,21 @@ export function ClinicalGuideView({ guide, onBack }: Props) {
       <ContentList title="Focused history" items={guide.historyPrompts} icon={BookOpen}/>
       <ContentList title="Examination framework" items={guide.examinationPrompts} icon={Stethoscope}/>
       <ContentList title="Investigations to consider" items={guide.investigationsToConsider} icon={CheckCircle2}/>
+      <ContentList title="Management principles" items={guide.managementPrinciples} icon={ShieldAlert}/>
+    </section>
+    <section className="guide-differentials">
+      <span className="kicker">DIFFERENTIAL FRAMEWORK</span>
+      <p className="guide-differential-intro">Compare possible groups using the supplied history, examination and results. These are teaching prompts, not diagnoses.</p>
+      <div className="guide-differential-grid">
+        {guide.differentialFrameworks.map((item) => (
+          <article className="guide-differential-card" key={item.diagnosisGroup}>
+            <h3>{item.diagnosisGroup}</h3>
+            <b>Features to explore</b>
+            <ul>{item.featuresToExplore.map((feature) => <li key={feature}>{feature}</li>)}</ul>
+            <p><b>Clinical caution:</b> {item.caution}</p>
+          </article>
+        ))}
+      </div>
     </section>
     <section className="guide-alerts"><span><ShieldAlert size={19}/></span><div><b>Features requiring senior clinical review</b><ul>{guide.escalationFeatures.map((item)=><li key={item}>{item}</li>)}</ul></div></section>
     <section className="guide-keypoints"><span className="kicker">HIGH-YIELD POINTS</span><ul>{guide.keyPoints.map((point)=><li key={point}>{point}</li>)}</ul></section>
