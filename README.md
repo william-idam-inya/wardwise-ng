@@ -60,10 +60,10 @@ WardWise uses a dedicated project named `wardwise-ng` (ref `ooutidbssimzvvgkinek
 
 Applied migration files:
 
-- `supabase/migrations/20261030000000_create_profiles.sql`
-- `supabase/migrations/20261030010000_create_clinical_cases.sql`
-- `supabase/migrations/20261031010000_create_simulation_bookmarks_audit.sql`
-- `supabase/migrations/20261031101500_revoke_service_role_from_profiles.sql`
+- `supabase/migrations/20261031095500_create_profiles.sql`
+- `supabase/migrations/20261031095503_create_clinical_cases.sql`
+- `supabase/migrations/20261031095507_create_simulation_bookmarks_audit.sql`
+- `supabase/migrations/20261031095851_revoke_service_role_from_profiles.sql`
 
 Tables: `profiles`, `clinical_cases`, `clerking_sessions`, `simulation_sessions`, `learning_bookmarks`, and `audit_events`. RLS is enabled on all six. Owner-based policies restrict user records. The browser uses only the publishable key; no service-role key belongs in the client. Two-user isolation testing remains required before real-user case data is enabled.
 
