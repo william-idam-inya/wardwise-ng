@@ -11,7 +11,7 @@ describe('Virtual Patient Simulation', () => {
   it('reveals debrief and teaching impression only after finishing', () => {
     render(<VirtualPatientSimulation onBack={() => undefined}/>);
     fireEvent.change(screen.getByLabelText(/ask the patient a question/i), {target:{value:'When did the pain start?'}});
-    fireEvent.click(screen.getByRole('button',{name:/ask/i}));
+    fireEvent.click(screen.getByRole('button',{name:'Ask',exact:true}));
     expect(screen.getByText(/18 hours ago/i)).toBeInTheDocument();
     expect(screen.queryByRole('heading',{name:/interview debrief/i})).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button',{name:/finish interview/i}));
