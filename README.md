@@ -9,17 +9,17 @@ WardWise NG is an educational platform for medical and surgery students, especia
 - AI Guided Clinical Clerking: biodata, a separate history for each presenting complaint, review of systems, examination, investigations, assessment and plan.
 - Clinical Tutor: focused learning guides and reasoning frameworks.
 - Virtual Patient Simulation: consistent fictional scenarios and examiner feedback.
-- Case Library: private save, reopen, edit, archive/delete and export.
+- Case Library: private save, reopen, edit, duplicate-as-new, archive/delete and note export.
 - Learning Catalogue: browse and search by discipline, specialty and topic.
 
 ## Current delivery status
 - **Milestone 0 — Foundation:** app shell, responsive navigation, Workspace, light/dark theme, starter catalogue, accessible status indicator and initial tests.
 - **Milestone 1 — Auth/profile implementation:** Supabase client, email/password registration and sign-in, password reset/recovery, profile setup/editing, profile fetch, a profiles SQL migration, and owner-based row-level security are implemented in code.
-- **Milestone 3 — Guided clerking:** a 13-stage form covers separate complaint histories, ROS, past/family/social history, examination, investigations, assessment, plan and note review. The draft records whether each ROS system was actually reviewed and does not transform unanswered items into negatives.
-- **Milestone 4 — Case Library:** private case and session tables, RLS migrations, save/reopen/edit/archive/delete services, and recent-case shortcuts are implemented in code.
+- **Milestone 3 — Guided clerking:** a 13-stage form covers separate complaint histories, ROS, past/family/social history, examination, investigations, assessment, plan and note review. Note output begins with an “I present…” statement composed only from entered biodata and can be printed / saved as PDF. The draft records whether each ROS system was actually reviewed and does not transform unanswered items into negatives.
+- **Milestone 4 — Case Library:** private case and session tables, RLS migrations, save/reopen/edit/duplicate-as-new/archive/delete services, and recent-case shortcuts are implemented in code.
 - **Milestone 5 — Gemini question facilitator:** an authenticated Supabase Edge Function, stage-aware context builder, JSON-schema response validation, request-size limits, server-side API key use, and a one-question action in the clerking UI are implemented in code. Deployment, model compatibility tests, durable quotas and clinician-led safety evaluation remain pending.
-- **Milestone 6 — Clinical Tutor:** three source-linked offline guides (jaundice, paediatric UTI and acute abdominal pain), focused history/examination/investigation prompts, escalation features and interactive knowledge checks are implemented. Independent clinician review and further guide coverage remain pending.
-- **Milestone 7 — Virtual Patient Simulation:** two scripted fictional scenarios, explicit examination/investigation disclosure on request, unknown-detail fallback, domain coverage and a post-interview debrief are implemented. The rubric is formative and not a validated OSCE score.
+- **Milestone 6 — Clinical Tutor:** four source-linked offline guides (jaundice, paediatric UTI, acute abdominal pain and appendicitis), focused history/examination/investigation prompts, differential frameworks, management principles, escalation features and interactive knowledge checks are implemented. Independent clinician review and further guide coverage remain pending.
+- **Milestone 7 — Virtual Patient Simulation:** two scripted fictional scenarios, explicit examination/investigation disclosure on request, unknown-detail fallback, domain coverage and a post-interview rubric covering examination, differentials and reasoning are implemented. The rubric is formative and not a validated OSCE score.
 - **Backend connection:** not yet complete. The connected Supabase account currently has the existing ClinClerk NG project only. WardWise must use a new, separate Supabase project. The migrations have not been applied and live auth/database tests have not yet run.
 - The app keeps the private workspace locked when Supabase public configuration is missing. It does not silently fall back to demo/private data. Gemini credentials are not included in browser code.
 
