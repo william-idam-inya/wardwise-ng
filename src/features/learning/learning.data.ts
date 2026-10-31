@@ -434,7 +434,6 @@ export const offlineGuides: ClinicalLearningGuide[] = [
     reviewedOn: '31 October 2026',
     educationalNote: 'This is a student learning framework, not a diagnostic or treatment protocol. Follow current Nigerian/institutional pathways and the supervising surgical team; WSES and SAGES recommendations must be adapted to local resources and patient factors.',
   },
-  },
 ];
 
 export function findOfflineGuide(topic: string): ClinicalLearningGuide | undefined {
