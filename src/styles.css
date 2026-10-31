@@ -347,3 +347,16 @@ html,body,#root{margin:0;min-width:320px;min-height:100%;background:var(--canvas
     white-space: pre-wrap !important;
   }
 }
+
+/* Clinical Tutor: differential reasoning and management learning panels */
+.guide-differentials{display:flex;flex-direction:column;gap:10px}
+.guide-differential-intro{margin:0;color:var(--ink-muted);font-size:10px;line-height:1.6}
+.guide-differential-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.guide-differential-card{min-width:0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+.guide-differential-card h3{margin:0 0 9px;font-size:11px;line-height:1.5}
+.guide-differential-card>b{display:block;color:var(--brand);font-size:9px}
+.guide-differential-card ul{display:flex;flex-direction:column;gap:6px;margin:6px 0 10px;padding-left:17px}
+.guide-differential-card li{color:var(--ink-soft);font-size:9.5px;line-height:1.55}
+.guide-differential-card p{margin:0;padding:8px 9px;border-radius:8px;background:var(--soft);color:var(--ink-muted);font-size:9px;line-height:1.55}
+.guide-differential-card p b{color:var(--ink-soft)}
+@media(max-width:760px){.guide-differential-grid{grid-template-columns:1fr}}
