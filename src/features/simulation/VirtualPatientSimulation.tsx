@@ -61,6 +61,15 @@ export function VirtualPatientSimulation({ onBack }: Props) {
       <div className="simulation-score"><b>{covered.length} of {scenario.requiredDomains.length}</b><small>key domains explored</small></div>
       <h3>Domains to revisit</h3>
       {scenario.requiredDomains.filter((item)=>!domains.includes(item.id)).length ? <ul>{scenario.requiredDomains.filter((item)=>!domains.includes(item.id)).map((item)=><li key={item.id}>{item.label}</li>)}</ul> : <p>You explored every domain listed in this scenario rubric.</p>}
+      <section className="simulation-examiner-rubric">
+        <span className="kicker">EXAMINER RUBRIC — REVIEW AFTER YOUR INTERVIEW</span>
+        <p className="simulation-rubric-intro">Compare your interview with these expected clinical learning points. This is formative feedback, not an automated judgement of your competence.</p>
+        <div className="simulation-rubric-grid">
+          <article><h3>Examination points</h3><ul>{scenario.examinerRubric.examinationPoints.map((point)=><li key={point}>{point}</li>)}</ul></article>
+          <article><h3>Differential diagnoses to consider</h3><ul>{scenario.examinerRubric.differentialConsiderations.map((item)=><li key={item}>{item}</li>)}</ul></article>
+          <article><h3>Clinical reasoning checkpoints</h3><ul>{scenario.examinerRubric.reasoningPoints.map((point)=><li key={point}>{point}</li>)}</ul></article>
+        </div>
+      </section>
       <div className="simulation-diagnosis"><span className="kicker">SCENARIO TEACHING IMPRESSION — REVEALED AFTER INTERVIEW</span><p>{scenario.teachingDiagnosis}</p></div>
       <p className="simulation-examiner-note">{scenario.examinerNote}</p>
       <button className="btn btn-primary btn-small" type="button" onClick={()=>reset()}><RotateCcw size={14}/> Start again</button>
