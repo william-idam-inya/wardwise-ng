@@ -13,6 +13,8 @@ describe('offline clinical learning content', () => {
       expect(guide.sources.length).toBeGreaterThan(0);
       expect(guide.sources.every((source) => source.url.startsWith('https://'))).toBe(true);
       expect(guide.questions.length).toBeGreaterThan(0);
+      expect(guide.differentialFrameworks.length).toBeGreaterThan(0);
+      expect(guide.managementPrinciples.length).toBeGreaterThan(0);
       for (const question of guide.questions) {
         expect(question.answerIndex).toBeGreaterThanOrEqual(0);
         expect(question.answerIndex).toBeLessThan(question.options.length);
