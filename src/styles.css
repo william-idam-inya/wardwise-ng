@@ -327,3 +327,23 @@ html,body,#root{margin:0;min-width:320px;min-height:100%;background:var(--canvas
 @media(max-width:980px){.tutor-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.simulation-layout{grid-template-columns:1fr}}
 @media(max-width:760px){.guide-content-grid{grid-template-columns:1fr}.guide-hero{padding:20px}.guide-hero>.module-icon{display:none}}
 @media(max-width:620px){.tutor-guide-grid{grid-template-columns:1fr}.guide-quiz{padding:15px}.guide-quiz-heading{flex-direction:column}.guide-options{grid-template-columns:1fr}.guide-source{align-items:flex-start;flex-direction:column}.guide-alerts{padding:12px}.simulation-case-select{align-items:stretch;flex-direction:column}.simulation-case-select>label{min-width:0}.simulation-case-select>div{min-width:0}.simulation-case-select>button{align-self:flex-end}.simulation-turn{max-width:96%}.simulation-domain-list{display:grid;grid-template-columns:1fr}.simulation-hero>.module-icon{display:none}}
+
+@media print {
+  @page { margin: 18mm; }
+  body * { visibility: hidden !important; }
+  .clerking-note-print, .clerking-note-print * { visibility: visible !important; }
+  .clerking-note-print { position: absolute; inset: 0; width: 100%; }
+  .clerking-note-text {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    color: #111 !important;
+    font-family: Georgia, "Times New Roman", serif !important;
+    font-size: 10pt !important;
+    line-height: 1.65 !important;
+    white-space: pre-wrap !important;
+  }
+}
