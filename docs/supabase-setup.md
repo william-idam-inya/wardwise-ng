@@ -103,3 +103,16 @@ After both migrations, test with two authenticated accounts:
 The app saves the case row and the session row as two API writes. If the second write fails after the case row succeeds, the UI reports a partial save and retains the case ID so the user can retry the session save. A successful database save is not clinical validation or supervisor sign-off.
 
 Exports and automatic Gemini interpretation are not part of this persistence increment. The app must not send the structured case to an AI service until the server-side authenticated Gemini function is implemented and the learner explicitly requests that operation.
+
+
+## 9. Privacy and clinical-safety notice
+
+The in-app development notice is implemented at `src/features/privacy/PrivacyNotice.tsx`. It explains the planned categories of student profile data, case/session content, owner-based access controls and the stage-specific Gemini request flow. It explicitly states that the WardWise Supabase project has not yet been created, RLS isolation has not been tested with two accounts, and live data is not ready for clinical use.
+
+The notice also states:
+- Do not enter patient names, hospital identifiers, contact details, exact dates of birth, identifiable images or other patient identifiers.
+- `store: false` is not a guarantee of zero provider-side processing or retention; review the provider's applicable terms before enabling AI processing.
+- Account/profile deletion, automatic retention controls and a dedicated in-app content-report receiver are not implemented.
+- The app is not approved for identifiable patient information and the notice is not a final legal privacy policy or a claim of compliance with the Nigeria Data Protection Act.
+
+The report form only prepares and copies a draft. It does not submit a report to WardWise. Configure an approved privacy contact and a real issue-reporting destination before production. Obtain appropriate Nigerian privacy/legal review and institutional approval before any patient-related data processing.
