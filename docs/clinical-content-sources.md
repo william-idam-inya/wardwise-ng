@@ -18,3 +18,8 @@ Source: [Merck Manual Professional Edition — Acute Abdominal Pain](https://www
 - A qualified clinician should review every guide before the material is treated as endorsed teaching content.
 - Recheck content when the source changes or local guidelines are updated.
 - Keep curated offline content visibly distinct from AI-generated content.
+
+
+## Differential reasoning and management teaching
+
+Each starter guide now provides a structured differential framework and high-level management principles. These sections ask students to compare possible diagnostic groups with supporting clues and cautions; they do not confirm diagnoses or supply autonomous drug regimens. The paediatric UTI guide explicitly separates NICE guidance from the need to follow local Nigerian/institutional protocols. All differential and management material remains subject to qualified clinician review before being treated as endorsed teaching content.
