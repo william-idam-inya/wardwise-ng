@@ -1,6 +1,6 @@
 # Clinical content sources and review
 
-WardWise NG's offline Clinical Tutor contains five source-linked educational summaries. They are not exhaustive guidelines, clinical decision-support algorithms or instructions to prescribe.
+WardWise NG's offline Clinical Tutor contains six source-linked educational summaries. They are not exhaustive guidelines, clinical decision-support algorithms or instructions to prescribe.
 
 ## Jaundice
 Source: [Merck Manual Professional Edition — Jaundice](https://www.merckmanuals.com/professional/hepatic-and-biliary-disorders/approach-to-the-patient-with-liver-disease/jaundice). The guide covers timing of jaundice and dark urine, stool changes, pruritus, pain, relevant exposure/past history, examination, biochemical tests and red flags.
@@ -40,3 +40,12 @@ Source: [EAU Guidelines on Paediatric Urology 2026 — Congenital Lower Urinary 
 The guide covers antenatal and neonatal recognition, renal and electrolyte monitoring, the role of ultrasound and VCUG, urgent bladder drainage and stabilisation, specialist-directed endoscopic valve ablation, and lifelong renal/bladder follow-up. The 2026 EAU guideline recommends VCUG in suspected PUV, with lateral urethral views during voiding and without a catheter in situ for those views. It also recommends bladder drainage in newborns with suspected infravesical obstruction and lifelong monitoring of renal and bladder function.
 
 This is a learner-facing summary, not a neonatal emergency protocol. Suspected obstruction requires urgent specialist assessment and local pathway adherence.
+
+
+## Hypospadias
+
+Sources:
+- [EAU Guidelines on Paediatric Urology — Hypospadias](https://uroweb.org/guidelines/paediatric-urology/chapter/hypospadias). The hypospadias section was revised in the 2025 EAU edition.
+- [EAU Paediatric Urology — Summary of 2025 changes](https://uroweb.org/guidelines/paediatric-urology/summary-of-changes/2025).
+
+The guide summarises anatomical classification, the examination features used to characterise severity, associated undescended testes and the need for DSD evaluation when both testes are undescended, broad reconstructive objectives, usual timing and potential complications. It emphasises that routine imaging is not recommended by the EAU panel for otherwise isolated hypospadias, that the prepuce should be preserved until the reconstruction plan is assessed, and that operative decisions belong to the specialist team.
