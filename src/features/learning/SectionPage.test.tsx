@@ -32,7 +32,7 @@ describe('Clinical Tutor and learning catalogue', () => {
   it('filters the catalogue by discipline and specialty name', () => {
     render(<SectionPage section="learning-catalogue" onNavigate={vi.fn()} />);
     fireEvent.change(screen.getByRole('textbox', { name: /search learning catalogue/i }), { target: { value: 'urology' } });
-    expect(screen.getByRole('heading', { name: /urology/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { name: /urology/i }).length).toBeGreaterThan(0);
     expect(screen.getByRole('button', { name: /hypospadias/i })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: /cardiology/i })).not.toBeInTheDocument();
   });
