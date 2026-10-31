@@ -425,3 +425,15 @@ html,body,#root{margin:0;min-width:320px;min-height:100%;background:var(--canvas
 .guide-bookmark-message--error{background:#fff2f2;color:#963f3f}
 :root[data-theme=dark] .guide-bookmark-message--error{background:#3c292b;color:#f2b6b6}
 @media(max-width:620px){.guide-hero-actions{align-self:flex-start}.guide-hero-actions>.module-icon{display:none}}
+
+.simulation-history{padding:15px 17px}
+.simulation-history-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.simulation-history-heading h2{margin-top:4px;font-size:14px}
+.simulation-history-list{display:flex;flex-direction:column}
+.simulation-history-list>button{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 4px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);text-align:left}
+.simulation-history-list>button:last-child{border-bottom:0}
+.simulation-history-list>button>span{display:flex;min-width:0;flex-direction:column;gap:4px}
+.simulation-history-list b{font-size:10px}
+.simulation-history-list small,.simulation-history-empty{color:var(--ink-muted);font-size:9px}
+.simulation-history-list svg{flex:0 0 auto;color:var(--brand)}
+.simulation-history-empty{padding:12px 0}
