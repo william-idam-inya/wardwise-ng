@@ -9,6 +9,9 @@ import { VirtualPatientSimulation } from './simulation/VirtualPatientSimulation'
 type Props = { section: Exclude<SectionId, 'workspace'>; query?: string; onNavigate: (section: SectionId) => void };
 type Feature = { title: string; detail: string };
 type Module = { title: string; eyebrow: string; intro: string; icon: LucideIcon; status: string; features: Feature[]; action?: SectionId };
+type CatalogueTopic = { title: string; aliases?: string[] };
+type CatalogueSpecialty = { title: string; topics: CatalogueTopic[] };
+type CatalogueDiscipline = { title: string; specialties: CatalogueSpecialty[] };
 
 const modules: Record<Exclude<SectionId, 'workspace'>, Module> = {
   clerking: { title: 'AI Guided Clinical Clerking', eyebrow: 'STRUCTURED HISTORY-TAKING', icon: ClipboardList, status: 'Guided workflow available', intro: 'Work through biodata, each presenting complaint, review of systems, examination, investigations and assessment without losing the thread of the history.', features: [
@@ -30,7 +33,7 @@ const modules: Record<Exclude<SectionId, 'workspace'>, Module> = {
     { title: 'Search & filter', detail: 'Find cases by specialty, presentation, status and update date.' },
     { title: 'Print a reviewed note', detail: 'Review a note before printing or exporting a PDF copy.' },
   ]},
-  'learning-catalogue': { title: 'Learning Catalogue', eyebrow: 'EXPLORE BY DISCIPLINE, SPECIALTY & TOPIC', icon: BookOpen, status: 'Starter catalogue · ' + offlineGuides.length + ' detailed offline guides', intro: 'Search a presenting complaint or browse by clinical discipline. Detailed source-linked guides are clearly distinguished from topics still being prepared.', features: [] },
+  'learning-catalogue': { title: 'Learning Catalogue', eyebrow: 'DISCIPLINE → SPECIALTY → TOPIC', icon: BookOpen, status: 'Starter taxonomy · ' + offlineGuides.length + ' detailed offline guides', intro: 'Browse clinical disciplines, specialties and presentations in a structured hierarchy, or search the entire catalogue. Detailed guides are clearly marked.', features: [] },
   'profile-settings': { title: 'Profile & settings', eyebrow: 'MAKE YOUR WORKSPACE YOURS', icon: UserRound, status: 'Account profile', intro: 'Your profile holds the minimum details needed to personalise learning. Account security and profile access are provided through Supabase.', features: [
     { title: 'Student profile', detail: 'Name, sex, age in years, study level, institution and optional training site.' },
     { title: 'Display preferences', detail: 'Light/dark mode and responsive typography.' },
@@ -39,14 +42,148 @@ const modules: Record<Exclude<SectionId, 'workspace'>, Module> = {
   ]},
 };
 
-const areas = [
-  { title: 'Medicine', topics: ['Cardiology', 'Respiratory medicine', 'Gastroenterology', 'Jaundice evaluation', 'Endocrinology', 'Neurology', 'Renal medicine', 'Infectious diseases', 'Haematology', 'Diabetes mellitus', 'Hypertension'] },
-  { title: 'Surgery', topics: ['General & gastrointestinal surgery', 'Acute abdominal pain', 'Appendicitis', 'Hepatobiliary & pancreatic', 'Endocrine surgery', 'Breast & colorectal', 'Trauma & emergency surgery', 'Orthopaedics & traumatology', 'Urology', 'ENT', 'Neurosurgery', 'Cardiothoracic surgery', 'Plastic surgery & burns', 'Paediatric surgery', 'Vascular surgery', 'Ophthalmology & maxillofacial'] },
-  { title: 'Paediatrics', topics: ['Neonatology', 'Growth & development', 'Suspected UTI in a child', 'Paediatric emergencies', 'Common childhood presentations'] },
-  { title: 'Obstetrics & Gynaecology', topics: ['Antenatal care', 'Labour & delivery', 'Gynaecological presentations', 'Maternal emergencies'] },
-  { title: 'Emergency Medicine', topics: ['Initial assessment', 'Shock', 'Acute pain', 'Trauma', 'Resuscitation principles'] },
-  { title: 'Family, Psychiatry & Community Medicine', topics: ['Primary care', 'Mental health', 'Epidemiology', 'Prevention & screening'] },
+const areas: CatalogueDiscipline[] = [
+  {
+    title: 'Medicine',
+    specialties: [
+      { title: 'General / Internal Medicine', topics: [
+        { title: 'Approach to the medical patient' }, { title: 'Fever in an adult' }, { title: 'Weight loss' }, { title: 'Fatigue and weakness' },
+      ]},
+      { title: 'Cardiology', topics: [
+        { title: 'Cardiology overview' }, { title: 'Chest pain' }, { title: 'Heart failure' }, { title: 'Hypertension' }, { title: 'Palpitations' }, { title: 'Syncope' },
+      ]},
+      { title: 'Respiratory Medicine', topics: [
+        { title: 'Cough' }, { title: 'Dyspnoea' }, { title: 'Haemoptysis' }, { title: 'Asthma' }, { title: 'Pneumonia' }, { title: 'Pleural effusion' },
+      ]},
+      { title: 'Gastroenterology & Hepatology', topics: [
+        { title: 'Jaundice evaluation', aliases: ['yellow eyes', 'yellow skin', 'scleral icterus'] }, { title: 'Upper gastrointestinal bleeding' }, { title: 'Lower gastrointestinal bleeding' }, { title: 'Chronic liver disease' }, { title: 'Ascites' }, { title: 'Dysphagia' },
+      ]},
+      { title: 'Endocrinology', topics: [
+        { title: 'Diabetes mellitus' }, { title: 'Thyroid enlargement / goitre' }, { title: 'Thyrotoxicosis' }, { title: 'Hypothyroidism' }, { title: 'Adrenal disorders' },
+      ]},
+      { title: 'Neurology', topics: [
+        { title: 'Headache' }, { title: 'Seizures' }, { title: 'Stroke' }, { title: 'Weakness and paralysis' }, { title: 'Altered mental status' },
+      ]},
+      { title: 'Renal Medicine', topics: [
+        { title: 'Acute kidney injury' }, { title: 'Chronic kidney disease' }, { title: 'Haematuria' }, { title: 'Proteinuria' }, { title: 'Electrolyte disorders' },
+      ]},
+      { title: 'Infectious Diseases', topics: [
+        { title: 'Malaria' }, { title: 'HIV-related presentations' }, { title: 'Tuberculosis' }, { title: 'Sepsis' }, { title: 'Meningitis' },
+      ]},
+      { title: 'Haematology', topics: [
+        { title: 'Anaemia' }, { title: 'Sickle cell disease' }, { title: 'Bleeding disorders' }, { title: 'Lymphadenopathy' },
+      ]},
+    ],
+  },
+  {
+    title: 'Surgery',
+    specialties: [
+      { title: 'General & Gastrointestinal Surgery', topics: [
+        { title: 'Acute abdominal pain', aliases: ['acute abdomen'] }, { title: 'Appendicitis', aliases: ['acute appendicitis', 'right iliac fossa pain', 'RIF pain'] }, { title: 'Intestinal obstruction' }, { title: 'Peritonitis' }, { title: 'Hernias' }, { title: 'Peptic ulcer complications' },
+      ]},
+      { title: 'Hepatobiliary & Pancreatic Surgery', topics: [
+        { title: 'Gallstone disease' }, { title: 'Acute cholecystitis' }, { title: 'Obstructive jaundice' }, { title: 'Pancreatitis' }, { title: 'Liver masses' },
+      ]},
+      { title: 'Endocrine Surgery', topics: [
+        { title: 'Thyroid nodules and goitre' }, { title: 'Thyroid malignancy' }, { title: 'Parathyroid disease' }, { title: 'Adrenal masses' },
+      ]},
+      { title: 'Breast & Colorectal Surgery', topics: [
+        { title: 'Breast lump' }, { title: 'Breast cancer assessment' }, { title: 'Colorectal cancer' }, { title: 'Anorectal disorders' },
+      ]},
+      { title: 'Trauma & Emergency Surgery', topics: [
+        { title: 'Initial trauma assessment' }, { title: 'Abdominal trauma' }, { title: 'Thoracic trauma' }, { title: 'Burns assessment' }, { title: 'Acute surgical abdomen' },
+      ]},
+      { title: 'Orthopaedics & Traumatology', topics: [
+        { title: 'Fracture assessment' }, { title: 'Limb deformity' }, { title: 'Joint pain' }, { title: 'Bone and joint infection' }, { title: 'Spinal injury' },
+      ]},
+      { title: 'Urology', topics: [
+        { title: 'Lower urinary tract symptoms' }, { title: 'Urinary retention' }, { title: 'Haematuria' }, { title: 'Renal / ureteric stones' }, { title: 'Benign prostatic enlargement' }, { title: 'Hypospadias' }, { title: 'Posterior urethral valves' },
+      ]},
+      { title: 'Ear, Nose & Throat (ENT)', topics: [
+        { title: 'Hearing loss' }, { title: 'Otalgia and ear discharge' }, { title: 'Epistaxis' }, { title: 'Sore throat' }, { title: 'Neck lump' },
+      ]},
+      { title: 'Neurosurgery', topics: [
+        { title: 'Head injury' }, { title: 'Raised intracranial pressure' }, { title: 'Spinal cord compression' }, { title: 'Hydrocephalus' },
+      ]},
+      { title: 'Cardiothoracic Surgery', topics: [
+        { title: 'Chest trauma' }, { title: 'Lung mass' }, { title: 'Pleural disease' }, { title: 'Congenital heart disease overview' },
+      ]},
+      { title: 'Plastic, Reconstructive Surgery & Burns', topics: [
+        { title: 'Burns' }, { title: 'Wound assessment' }, { title: 'Skin and soft-tissue defects' }, { title: 'Hand injuries' },
+      ]},
+      { title: 'Paediatric Surgery', topics: [
+        { title: 'Hypospadias' }, { title: 'Posterior urethral valves' }, { title: 'Undescended testis' }, { title: 'Intussusception' }, { title: 'Congenital abdominal wall defects' },
+      ]},
+      { title: 'Vascular Surgery', topics: [
+        { title: 'Peripheral arterial disease' }, { title: 'Acute limb ischaemia' }, { title: 'Varicose veins' }, { title: 'Diabetic foot' },
+      ]},
+      { title: 'Ophthalmology & Maxillofacial Surgery', topics: [
+        { title: 'Red eye' }, { title: 'Visual loss' }, { title: 'Facial trauma' }, { title: 'Maxillofacial infection' },
+      ]},
+    ],
+  },
+  {
+    title: 'Paediatrics',
+    specialties: [
+      { title: 'General Paediatrics', topics: [
+        { title: 'Fever in a child' }, { title: 'Suspected UTI in a child', aliases: ['urinary tract infection in a child', 'paediatric UTI'] }, { title: 'Failure to thrive' }, { title: 'Cough and difficulty breathing' }, { title: 'Diarrhoea and vomiting' },
+      ]},
+      { title: 'Neonatology', topics: [
+        { title: 'Neonatal jaundice' }, { title: 'Neonatal sepsis' }, { title: 'Neonatal respiratory distress' }, { title: 'Prematurity' },
+      ]},
+      { title: 'Growth & Development', topics: [
+        { title: 'Growth assessment' }, { title: 'Developmental milestones' }, { title: 'Immunisation review' }, { title: 'Nutritional assessment' },
+      ]},
+      { title: 'Paediatric Emergencies', topics: [
+        { title: 'Paediatric initial assessment' }, { title: 'Dehydration' }, { title: 'Convulsions' }, { title: 'Severe acute malnutrition' },
+      ]},
+    ],
+  },
+  {
+    title: 'Obstetrics & Gynaecology',
+    specialties: [
+      { title: 'Obstetrics', topics: [
+        { title: 'Antenatal booking' }, { title: 'Hypertensive disorders of pregnancy' }, { title: 'Antepartum haemorrhage' }, { title: 'Labour assessment' }, { title: 'Postpartum haemorrhage' },
+      ]},
+      { title: 'Gynaecology', topics: [
+        { title: 'Abnormal uterine bleeding' }, { title: 'Pelvic pain' }, { title: 'Vaginal discharge' }, { title: 'Ectopic pregnancy' }, { title: 'Infertility' },
+      ]},
+    ],
+  },
+  {
+    title: 'Emergency Medicine',
+    specialties: [
+      { title: 'Initial Assessment & Resuscitation', topics: [
+        { title: 'ABCDE approach' }, { title: 'Shock' }, { title: 'Sepsis recognition' }, { title: 'Altered consciousness' },
+      ]},
+      { title: 'Acute Presentations', topics: [
+        { title: 'Acute chest pain' }, { title: 'Acute dyspnoea' }, { title: 'Acute abdominal pain', aliases: ['acute abdomen'] }, { title: 'Poisoning and overdose' },
+      ]},
+      { title: 'Trauma', topics: [
+        { title: 'Primary trauma survey' }, { title: 'Head injury' }, { title: 'Spinal trauma' }, { title: 'Burns' },
+      ]},
+    ],
+  },
+  {
+    title: 'Family, Psychiatry & Community Medicine',
+    specialties: [
+      { title: 'Family Medicine', topics: [
+        { title: 'Primary care consultation' }, { title: 'Multimorbidity' }, { title: 'Preventive care' },
+      ]},
+      { title: 'Psychiatry', topics: [
+        { title: 'Depression assessment' }, { title: 'Psychosis assessment' }, { title: 'Anxiety disorders' }, { title: 'Substance use disorders' },
+      ]},
+      { title: 'Community & Public Health', topics: [
+        { title: 'Epidemiology principles' }, { title: 'Screening and prevention' }, { title: 'Health promotion' }, { title: 'Outbreak investigation' },
+      ]},
+    ],
+  },
 ];
+
+function topicMatches(topic: CatalogueTopic, query: string): boolean {
+  const values = [topic.title, ...(topic.aliases ?? [])];
+  return values.some((value) => value.toLowerCase().includes(query) || query.includes(value.toLowerCase()));
+}
 
 export function SectionPage({ section, query = '', onNavigate }: Props) {
   const item = modules[section];
@@ -60,9 +197,24 @@ export function SectionPage({ section, query = '', onNavigate }: Props) {
     const q = term.trim().toLowerCase();
     return areas
       .filter((area) => discipline === 'All disciplines' || area.title === discipline)
-      .map((area) => ({ ...area, topics: area.topics.filter((topic) => !q || topic.toLowerCase().includes(q) || area.title.toLowerCase().includes(q)) }))
-      .filter((area) => !q || area.title.toLowerCase().includes(q) || area.topics.length > 0);
+      .map((area) => {
+        const disciplineMatch = Boolean(q && area.title.toLowerCase().includes(q));
+        const specialties = area.specialties
+          .map((specialty) => {
+            const specialtyMatch = Boolean(q && specialty.title.toLowerCase().includes(q));
+            const topics = !q || disciplineMatch || specialtyMatch
+              ? specialty.topics
+              : specialty.topics.filter((topic) => topicMatches(topic, q));
+            return { ...specialty, topics };
+          })
+          .filter((specialty) => specialty.topics.length > 0);
+        return { ...area, specialties };
+      })
+      .filter((area) => !q || area.title.toLowerCase().includes(q) || area.specialties.length > 0);
   }, [term, discipline]);
+
+  const topicCount = filtered.reduce((total, area) =>
+    total + area.specialties.reduce((sum, specialty) => sum + specialty.topics.length, 0), 0);
 
   if (section === 'simulation') return <VirtualPatientSimulation onBack={() => onNavigate('workspace')} />;
 
@@ -96,12 +248,21 @@ export function SectionPage({ section, query = '', onNavigate }: Props) {
     </section> : null}
 
     {section === 'learning-catalogue' ? <section className="surface-card catalogue-panel">
-      <div className="catalogue-toolbar"><label className="catalogue-search"><Search size={17}/><input aria-label="Search learning catalogue" value={term} onChange={(event)=>setTerm(event.target.value)} placeholder="Try “jaundice”, “abdominal pain” or “cardiology”…"/><small>{filtered.reduce((count,area)=>count+area.topics.length,0)} topics</small></label><label className="discipline-select"><span>Discipline</span><select value={discipline} onChange={(event)=>setDiscipline(event.target.value)}><option>All disciplines</option>{areas.map((area)=><option key={area.title}>{area.title}</option>)}</select></label></div>
-      {filtered.length ? <div className="catalogue-grid">{filtered.map((area)=><article className="catalogue-area" key={area.title}><header><span><BookOpen size={17}/></span><h2>{area.title}</h2><small>{area.topics.length}</small></header><div>{area.topics.map((topic)=>{
-        const hasGuide=Boolean(findOfflineGuide(topic));
-        return <button type="button" key={topic} onClick={()=>{setSelectedTopic(topic);}}><span>{topic}{hasGuide?<small className="topic-available">Offline guide</small>:null}</span><ArrowRight size={14}/></button>;
-      })}</div></article>)}</div> : <div className="no-results"><FolderSearch size={28}/><h3>No matching topics found</h3><p>Try a broader term or choose “All disciplines”. The starter catalogue does not yet include the full topic library.</p><button className="btn btn-secondary btn-small" type="button" onClick={()=>{setTerm('');setDiscipline('All disciplines');}}>Clear search</button></div>}
-      <p className="catalogue-note"><ShieldCheck size={15}/> Verify clinical advice with current references, local protocols and clinical supervisors.</p>
+      <div className="catalogue-toolbar">
+        <label className="catalogue-search"><Search size={17}/><input aria-label="Search learning catalogue" value={term} onChange={(event)=>setTerm(event.target.value)} placeholder="Search a presentation, specialty or subspecialty…"/><small>{topicCount} topics</small></label>
+        <label className="discipline-select"><span>Discipline</span><select value={discipline} onChange={(event)=>setDiscipline(event.target.value)}><option>All disciplines</option>{areas.map((area)=><option key={area.title}>{area.title}</option>)}</select></label>
+      </div>
+      {filtered.length ? <div className="catalogue-grid">{filtered.map((area)=><article className="catalogue-area" key={area.title}>
+        <header><span><BookOpen size={17}/></span><h2>{area.title}</h2><small>{area.specialties.reduce((sum,specialty)=>sum+specialty.topics.length,0)}</small></header>
+        <div className="catalogue-specialties">{area.specialties.map((specialty)=><section className="catalogue-specialty" key={specialty.title}>
+          <h3>{specialty.title}</h3>
+          <div>{specialty.topics.map((topic)=>{
+            const hasGuide=Boolean(findOfflineGuide(topic.title));
+            return <button type="button" key={topic.title} onClick={()=>setSelectedTopic(topic.title)}><span>{topic.title}{hasGuide?<small className="topic-available">Offline guide</small>:null}</span><ArrowRight size={14}/></button>;
+          })}</div>
+        </section>)}</div>
+      </article>)}</div> : <div className="no-results"><FolderSearch size={28}/><h3>No matching topics found</h3><p>Try a broader term or choose “All disciplines”. The starter catalogue does not yet include the full topic library.</p><button className="btn btn-secondary btn-small" type="button" onClick={()=>{setTerm('');setDiscipline('All disciplines');}}>Clear search</button></div>}
+      <p className="catalogue-note"><ShieldCheck size={15}/> Search spans disciplines, specialties, subspecialties and topic aliases. Detailed guides are marked separately; verify clinical advice with current references and local supervisors.</p>
     </section> : null}
 
     {section === 'profile-settings' ? <section className="profile-grid">
