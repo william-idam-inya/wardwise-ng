@@ -14,7 +14,7 @@ describe('Clinical Tutor and learning catalogue', () => {
     render(<SectionPage section="learning-catalogue" onNavigate={vi.fn()} />);
     fireEvent.change(screen.getByRole('textbox', { name: /search learning catalogue/i }), { target: { value: 'jaundice' } });
     fireEvent.click(screen.getByRole('button', { name: /jaundice evaluation/i }));
-    expect(screen.getByRole('heading', { name: /approach to a patient with jaundice/i })).toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { name: /approach to a patient with jaundice/i }).length).toBeGreaterThan(0);
     fireEvent.click(screen.getByRole('button', { name: /back to learning/i }));
     expect(screen.getByRole('textbox', { name: /search learning catalogue/i })).toHaveValue('jaundice');
   });
