@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { ArrowLeft, BookOpen, CheckCircle2, ExternalLink, GraduationCap, ShieldAlert, Stethoscope } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowLeft, Bookmark, BookmarkCheck, BookOpen, CheckCircle2, ExternalLink, GraduationCap, ShieldAlert, Stethoscope } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { ClinicalLearningGuide } from './learning.data';
+import { getLearningBookmark, setLearningBookmark } from './bookmark.service';
 
 type Props = { guide: ClinicalLearningGuide; onBack: () => void };
 
@@ -14,6 +15,38 @@ function ContentList({ title, items, icon: Icon }: { title: string; items: strin
 
 export function ClinicalGuideView({ guide, onBack }: Props) {
   const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [bookmarkState, setBookmarkState] = useState<'loading' | 'saved' | 'not-saved' | 'saving' | 'error'>('loading');
+  const [bookmarkMessage, setBookmarkMessage] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    setBookmarkState('loading');
+    setBookmarkMessage('');
+    void getLearningBookmark(guide.id)
+      .then((saved) => { if (active) setBookmarkState(saved ? 'saved' : 'not-saved'); })
+      .catch(() => {
+        if (active) {
+          setBookmarkState('error');
+          setBookmarkMessage('Bookmarks are unavailable. Sign in and make sure the WardWise learning-bookmarks migration has been applied.');
+        }
+      });
+    return () => { active = false; };
+  }, [guide.id]);
+
+  async function toggleBookmark() {
+    if (bookmarkState === 'loading' || bookmarkState === 'saving') return;
+    const nextSaved = bookmarkState !== 'saved';
+    setBookmarkState('saving');
+    setBookmarkMessage('');
+    try {
+      await setLearningBookmark(guide.id, nextSaved);
+      setBookmarkState(nextSaved ? 'saved' : 'not-saved');
+      setBookmarkMessage(nextSaved ? 'Added to your learning bookmarks.' : 'Removed from your learning bookmarks.');
+    } catch {
+      setBookmarkState('error');
+      setBookmarkMessage('Could not update this bookmark. Check your WardWise connection and database migration; no local-only bookmark was created.');
+    }
+  }
   const answered = Object.keys(answers).length;
   const correct = Object.entries(answers).filter(([index, answer]) => guide.questions[Number(index)]?.answerIndex === answer).length;
 
@@ -27,8 +60,15 @@ export function ClinicalGuideView({ guide, onBack }: Props) {
         <p>{guide.subtitle}</p>
         <div className="guide-meta"><span><CheckCircle2 size={14}/> Available offline</span><span>Content reviewed {guide.reviewedOn}</span></div>
       </div>
-      <span className="module-icon"><GraduationCap size={39}/></span>
+      <div className="guide-hero-actions">
+        <button className="btn btn-secondary btn-small" type="button" onClick={() => void toggleBookmark()} disabled={bookmarkState === 'loading' || bookmarkState === 'saving'}>
+          {bookmarkState === 'saved' ? <BookmarkCheck size={15}/> : <Bookmark size={15}/>}
+          {bookmarkState === 'loading' ? 'Checking…' : bookmarkState === 'saving' ? 'Saving…' : bookmarkState === 'saved' ? 'Remove bookmark' : 'Save guide'}
+        </button>
+        <span className="module-icon"><GraduationCap size={39}/></span>
+      </div>
     </section>
+    {bookmarkMessage ? <p className={bookmarkState === 'error' ? 'guide-bookmark-message guide-bookmark-message--error' : 'guide-bookmark-message'} role="status">{bookmarkMessage}</p> : null}
     <section className="guide-summary"><span><BookOpen size={19}/></span><div><b>Overview</b><p>{guide.summary}</p></div></section>
     <section className="guide-content-grid">
       <ContentList title="Learning objectives" items={guide.learningObjectives} icon={GraduationCap}/>
