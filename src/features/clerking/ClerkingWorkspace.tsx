@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, Clipboard, FilePlus2, Plus, ShieldCheck, Trash2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Clipboard, FilePlus2, Plus, Printer, ShieldCheck, Trash2 } from 'lucide-react';
 import type { SectionId } from '../../app/navigation';
 import { formatClerkingNote } from './noteFormatter';
 import { ProcessingIndicator } from '../../components/ProcessingIndicator';
@@ -508,8 +508,8 @@ export function ClerkingWorkspace({ draft, onDraftChange, onNavigate, onStartNew
 
           {activeStep === 12 ? <div className="clerking-note-preview">
             <div className="clerking-stage-prompt"><b>Review the structured note.</b><p>Check every section, correct errors and fill missing information. “Not elicited” means the information was not recorded; it is not a negative finding.</p></div>
-            <div className="clerking-note-actions"><button className="btn btn-primary btn-small" type="button" onClick={()=>void copyNote()}><Clipboard size={15}/> Copy note</button><button className="btn btn-secondary btn-small" type="button" onClick={()=>setNoteReviewed(true)}><Check size={15}/> Mark note reviewed</button>{copyStatus ? <span role="status">{copyStatus}</span> : null}</div>
-            <pre className="clerking-note-text">{note}</pre>
+            <div className="clerking-note-actions"><button className="btn btn-primary btn-small" type="button" onClick={()=>void copyNote()}><Clipboard size={15}/> Copy note</button><button className="btn btn-secondary btn-small" type="button" onClick={()=>window.print()}><Printer size={15}/> Print / Save PDF</button><button className="btn btn-secondary btn-small" type="button" onClick={()=>setNoteReviewed(true)}><Check size={15}/> Mark note reviewed</button>{copyStatus ? <span role="status">{copyStatus}</span> : null}</div>
+            <div className="clerking-note-print"><pre className="clerking-note-text">{note}</pre></div>
           </div> : null}
         </div>
         <footer className="clerking-stage-footer">
