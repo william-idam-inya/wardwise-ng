@@ -10,6 +10,7 @@ describe('Clinical Tutor and learning catalogue', () => {
     expect(screen.getByRole('heading', { name: /starter clinical guides/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /approach to a patient with jaundice/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /suspected urinary tract infection in a child/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /approach to suspected acute appendicitis/i })).toBeInTheDocument();
   });
 
   it('opens a selected guide and returns to catalogue search results', () => {
