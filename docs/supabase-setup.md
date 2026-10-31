@@ -116,3 +116,20 @@ The notice also states:
 - The app is not approved for identifiable patient information and the notice is not a final legal privacy policy or a claim of compliance with the Nigeria Data Protection Act.
 
 The report form only prepares and copies a draft. It does not submit a report to WardWise. Configure an approved privacy contact and a real issue-reporting destination before production. Obtain appropriate Nigerian privacy/legal review and institutional approval before any patient-related data processing.
+
+
+## 10. Simulation sessions, bookmarks and audit events
+
+The third migration is:
+
+`supabase/migrations/20261031010000_create_simulation_bookmarks_audit.sql`
+
+Apply it after the profile and clinical-case migrations. It adds:
+
+- `simulation_sessions`: owner-bound scenario ID, bounded transcript JSON, assessment JSON, optional score and timestamps. The optional score should remain null until the relevant simulation rubric has been independently reviewed.
+- `learning_bookmarks`: owner-bound stable topic/guide identifiers with one bookmark per topic per user.
+- `audit_events`: minimal metadata-only event records. The browser can read only its own events; it has no direct insert/update/delete policy. A future server-side writer must create events without storing narratives, transcripts, notes, identifiers or secrets.
+
+The bookmark service at `src/features/learning/bookmark.service.ts` uses the signed-in Supabase user and the owner-specific policy. The Clinical Tutor does not write browser-only bookmark copies when the database is unavailable; it reports that the database/migration is required.
+
+After applying all migrations to the separate WardWise project, extend the two-account isolation test to cover simulation sessions and bookmarks. Verify account A cannot read/update/delete account B's simulation or bookmark rows. Verify anonymous users cannot access any of these tables. Audit-event insertion must be tested only through an approved server-side writer once that feature is implemented.
