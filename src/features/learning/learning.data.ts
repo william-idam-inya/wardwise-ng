@@ -5,6 +5,12 @@ export type LearningQuestion = {
   explanation: string;
 };
 
+export type DifferentialConsideration = {
+  diagnosisGroup: string;
+  featuresToExplore: string[];
+  caution: string;
+};
+
 export type ClinicalLearningGuide = {
   id: string;
   title: string;
@@ -15,6 +21,8 @@ export type ClinicalLearningGuide = {
   historyPrompts: string[];
   examinationPrompts: string[];
   investigationsToConsider: string[];
+  differentialFrameworks: DifferentialConsideration[];
+  managementPrinciples: string[];
   escalationFeatures: string[];
   keyPoints: string[];
   questions: LearningQuestion[];
@@ -60,6 +68,31 @@ export const offlineGuides: ClinicalLearningGuide[] = [
       'Full blood count and haemolysis tests where increased bilirubin production is considered.',
       'Hepatitis serology and other targeted tests guided by exposure history and examination.',
       'Abdominal ultrasound is commonly used when cholestasis or biliary obstruction is suspected; further imaging depends on findings.',
+    ],
+    differentialFrameworks: [
+      {
+        diagnosisGroup: 'Predominantly unconjugated / pre-hepatic pattern',
+        featuresToExplore: ['Haemolysis or increased red-cell breakdown', 'Anaemia, pallor, splenomegaly or a relevant inherited history', 'Bilirubin fraction and haemolysis markers'],
+        caution: 'A history or one laboratory value cannot establish haemolysis. Confirm the biochemical pattern and investigate the cause under clinical supervision.',
+      },
+      {
+        diagnosisGroup: 'Hepatocellular pattern',
+        featuresToExplore: ['Viral or other infectious hepatitis risks and prodromal symptoms', 'Recent medicines, herbal products, alcohol or toxin exposure', 'Autoimmune, metabolic or ischaemic context where relevant'],
+        caution: 'Several causes can produce overlapping symptoms and enzyme patterns. Review the full history, liver tests and clinical context rather than assuming one cause.',
+      },
+      {
+        diagnosisGroup: 'Cholestatic / biliary pattern',
+        featuresToExplore: ['Dark urine, pale stools and pruritus', 'Gallstone history or biliary pain', 'Fever with persistent right-upper-quadrant pain', 'Ultrasound evidence of bile-duct dilatation or an obstructive lesion'],
+        caution: 'A cholestatic pattern does not by itself identify the level or cause of obstruction. Fever and marked continuous right-upper-quadrant pain raise concern for cholangitis.',
+      },
+    ],
+    managementPrinciples: [
+      'First assess physiological stability and evidence of hepatic dysfunction, encephalopathy, bleeding or sepsis.',
+      'Use bilirubin fractionation and the liver-test pattern to guide the next diagnostic questions; interpret results with symptoms and examination.',
+      'Review medicines, herbal preparations, alcohol and possible toxins with a senior clinician; do not assume a suspected exposure is the confirmed cause.',
+      'Select imaging according to the suspected mechanism; ultrasound is commonly used when biliary obstruction is suspected.',
+      'Urgently escalate suspected ascending cholangitis, encephalopathy, coagulopathy or haemodynamic compromise through local hospital pathways.',
+      'Definitive management depends on the cause and requires clinician assessment; this guide does not provide a prescribing regimen.',
     ],
     escalationFeatures: [
       'Altered mental status or asterixis.',
@@ -132,6 +165,31 @@ export const offlineGuides: ClinicalLearningGuide[] = [
       'For suspected UTI in a baby younger than 3 months, NICE recommends paediatric specialist referral and urgent urine microscopy and culture.',
       'In children aged 3 years and over, NICE provides a dipstick strategy; interpret results in the context of symptoms, risk and the guideline.',
     ],
+    differentialFrameworks: [
+      {
+        diagnosisGroup: 'Lower urinary tract infection (cystitis)',
+        featuresToExplore: ['Dysuria, frequency or urgency', 'Suprapubic discomfort', 'Absence or presence of systemic illness'],
+        caution: 'Symptoms may be atypical in young children. Use the age-specific testing strategy and do not label a lower UTI from one symptom alone.',
+      },
+      {
+        diagnosisGroup: 'Upper urinary tract infection (pyelonephritis)',
+        featuresToExplore: ['Fever and systemic illness', 'Loin pain or tenderness', 'Vomiting, reduced intake or poor general condition'],
+        caution: 'Clinical severity and age matter. A baby younger than 3 months with suspected UTI needs urgent paediatric specialist assessment.',
+      },
+      {
+        diagnosisGroup: 'Alternative source of fever or urinary discomfort',
+        featuresToExplore: ['Respiratory, ear, gastrointestinal or other infectious symptoms', 'Vulval irritation or vulvovaginitis where relevant', 'Constipation or dysfunctional voiding in recurrent urinary symptoms'],
+        caution: 'These possibilities do not rule out UTI. Interpret the whole assessment, urine results and clinical course together.',
+      },
+    ],
+    managementPrinciples: [
+      'Assess illness severity, age, hydration, perfusion and risk of sepsis before focusing on the urine result.',
+      'For suspected UTI in a baby younger than 3 months, arrange urgent paediatric specialist referral and urine microscopy/culture in line with the applicable pathway.',
+      'Collect urine before antimicrobials when feasible, but do not delay urgent assessment or treatment in a seriously ill child because a sample is difficult to obtain.',
+      'Use age-appropriate urine testing and review microscopy/culture results; assess the clinical response and investigate atypical or recurrent features.',
+      'Antimicrobial choice and duration must follow current local paediatric guidance, allergy history, culture results and local resistance patterns.',
+      'NICE NG224 is a UK guideline; learners in Nigeria must also follow current institutional and national guidance.',
+    ],
     escalationFeatures: [
       'Suspected UTI in a baby younger than 3 months: urgent paediatric specialist referral.',
       'High risk of serious illness, suspected sepsis, poor perfusion or marked systemic illness.',
@@ -200,6 +258,31 @@ export const offlineGuides: ClinicalLearningGuide[] = [
       'Laboratory tests and imaging may be required; there is no single panel appropriate for every patient.',
       'Choose imaging modality and urgency according to the clinical question and local pathway.',
       'Do not delay emergency senior review or resuscitation priorities while completing routine clerking.',
+    ],
+    differentialFrameworks: [
+      {
+        diagnosisGroup: 'Inflammatory or infective abdominal conditions',
+        featuresToExplore: ['Appendicitis: possible migration of pain towards the right lower quadrant with focal tenderness', 'Cholecystitis: right-upper-quadrant pain and relevant biliary history', 'Gastroenteritis: diarrhoea, vomiting, exposure history and diffuse cramps'],
+        caution: 'Pain location and associated symptoms are suggestive, not diagnostic. Early disease and atypical presentations can overlap.',
+      },
+      {
+        diagnosisGroup: 'Obstructive or perforating surgical conditions',
+        featuresToExplore: ['Distension, vomiting and inability to pass stool or flatus', 'Previous abdominal surgery or hernia history', 'Sudden severe pain, peritoneal signs or systemic deterioration'],
+        caution: 'Obstruction and perforation can deteriorate rapidly. Do not delay urgent senior/surgical review while completing routine clerking.',
+      },
+      {
+        diagnosisGroup: 'Urinary, gynaecological, vascular or extra-abdominal causes',
+        featuresToExplore: ['Dysuria, haematuria or loin-to-groin pain', 'Pregnancy possibility, vaginal bleeding or pelvic symptoms where relevant', 'Back pain with shock, vascular risk factors or chest/cardiac symptoms'],
+        caution: 'The differential depends on age, sex, pregnancy possibility, comorbidities and examination. Consider time-critical alternatives even when a surgical cause seems likely.',
+      },
+    ],
+    managementPrinciples: [
+      'Begin with severity assessment, vital signs, consciousness and peripheral perfusion; stabilisation takes priority when the patient is unstable.',
+      'Seek early senior or surgical review for peritonitis, shock, severe worsening pain or suspected time-critical pathology.',
+      'Choose laboratory tests and imaging to answer the clinical question; there is no single investigation panel suitable for every patient.',
+      'Consider pregnancy testing where biologically relevant and appropriate, and include urinary, gynaecological, vascular and extra-abdominal causes.',
+      'Reassess the patient after initial measures and whenever symptoms or vital signs change.',
+      'Analgesia, resuscitation and definitive treatment should follow qualified clinician direction and local emergency protocols.',
     ],
     escalationFeatures: [
       'Haemodynamic instability, poor peripheral perfusion, altered consciousness or toxic appearance.',
