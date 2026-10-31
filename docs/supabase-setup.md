@@ -51,10 +51,11 @@ Open the [WardWise Auth URL configuration](https://supabase.com/dashboard/projec
 Set:
 
 - Site URL: `https://wardwise-ng.pages.dev`
-- Redirect URL: `https://wardwise-ng.pages.dev/**`
+- Production redirect: `https://wardwise-ng.pages.dev/**`
+- Cloudflare preview redirect pattern: `https://*.wardwise-ng.pages.dev/**`
 - Local development redirect: `http://localhost:5173/**`
 
-When a Cloudflare branch-preview URL is available, add its exact origin/path as another redirect. Do not use a broad wildcard for production. Keep email confirmation enabled for real user registration unless there is a deliberate, documented reason to change it.
+The wildcard is limited to this WardWise Pages project so unique preview deployment URLs can complete auth callbacks. Do not use a broad wildcard such as all `pages.dev` hosts for production. Keep email confirmation enabled for real user registration unless there is a deliberate, documented reason to change it.
 
 The UI supports email/password registration, sign-in, password-reset email and password recovery. Complete end-to-end email tests before production use.
 
@@ -105,7 +106,7 @@ The browser can read only its own audit events and cannot insert/update/delete t
 
 ## 9. Gemini function status
 
-The authenticated `clinical-assistant` Supabase Edge Function is deployed with JWT verification enabled. Its URL is:
+The authenticated `clinical-assistant` Supabase Edge Function is deployed (version 2) with JWT verification enabled. Its URL is:
 
 `https://ooutidbssimzvvgkinek.supabase.co/functions/v1/clinical-assistant`
 
