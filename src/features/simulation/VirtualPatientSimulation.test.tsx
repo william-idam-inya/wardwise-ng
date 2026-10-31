@@ -32,7 +32,7 @@ describe('Virtual Patient Simulation', () => {
   it('reveals examiner feedback after the learner finishes and saves the debrief', async () => {
     render(<VirtualPatientSimulation onBack={() => undefined}/>);
     fireEvent.change(screen.getByLabelText(/ask the patient a question/i), {target:{value:'When did the pain start?'}});
-    fireEvent.click(screen.getByRole('button',{name:/ask/i}));
+    fireEvent.click(screen.getByRole('button',{name:/^ask$/i}));
     expect(screen.getByText(/18 hours ago/i)).toBeInTheDocument();
     expect(screen.queryByRole('heading',{name:/interview debrief/i})).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button',{name:/finish interview/i}));
@@ -46,7 +46,7 @@ describe('Virtual Patient Simulation', () => {
     vi.mocked(saveSimulationSession).mockRejectedValue(new Error('WardWise database is not configured.'));
     render(<VirtualPatientSimulation onBack={() => undefined}/>);
     fireEvent.change(screen.getByLabelText(/ask the patient a question/i), {target:{value:'When did the pain start?'}});
-    fireEvent.click(screen.getByRole('button',{name:/ask/i}));
+    fireEvent.click(screen.getByRole('button',{name:/^ask$/i}));
     fireEvent.click(screen.getByRole('button',{name:/finish interview/i}));
     expect(await screen.findByText(/WardWise database is not configured/i)).toBeInTheDocument();
     expect(screen.getByText(/18 hours ago/i)).toBeInTheDocument();
