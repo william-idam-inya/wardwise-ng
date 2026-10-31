@@ -58,13 +58,30 @@ function investigationBlock(draft: ClerkingDraft): string {
   }).join('\n');
 }
 
+function biodataOpening(draft: ClerkingDraft): string {
+  const sex = draft.biodata.sex;
+  const subject = sex === 'female' ? 'a female patient'
+    : sex === 'male' ? 'a male patient'
+    : sex === 'intersex' ? 'an intersex patient'
+    : 'a patient';
+  const age = draft.biodata.age.trim();
+  const origin = draft.biodata.residenceContext.trim();
+  const complaints = draft.complaints
+    .filter((item) => item.symptom.trim())
+    .map((item) => item.symptom.trim() + (item.duration.trim() ? ' (' + item.duration.trim() + ')' : ''));
+  const agePhrase = age ? ' aged ' + age : '';
+  const originPhrase = origin ? ' from ' + origin : '';
+  const presentation = complaints.length ? ' presenting with ' + complaints.join('; ') : ' for clinical assessment';
+  return 'I present ' + subject + agePhrase + originPhrase + presentation + '.';
+}
+
 export function formatClerkingNote(draft: ClerkingDraft): string {
   const complaints = draft.complaints.length ? draft.complaints.map(complaintBlock).join('\n\n') : 'Not elicited';
   const biodata = [
     'Age: ' + field(draft.biodata.age),
     'Sex: ' + (draft.biodata.sex === 'not_recorded' ? 'Not recorded' : draft.biodata.sex),
     'Occupation / schooling: ' + field(draft.biodata.occupation),
-    'Residence context: ' + field(draft.biodata.residenceContext),
+    'Place of origin / residence context: ' + field(draft.biodata.residenceContext),
     'Source of history: ' + field(draft.biodata.source),
     'Reliability: ' + field(draft.biodata.reliability),
   ].join('\n');
@@ -76,7 +93,7 @@ export function formatClerkingNote(draft: ClerkingDraft): string {
     'Clinical setting: ' + field(draft.setting),
     '',
     'BIODATA',
-    'I present a patient for clinical assessment. Age and other biodata are recorded below.' ,
+    biodataOpening(draft),
     biodata,
     '',
     'PRESENTING COMPLAINTS AND HISTORY OF PRESENTING COMPLAINT',
