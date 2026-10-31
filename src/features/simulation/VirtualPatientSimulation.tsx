@@ -185,7 +185,7 @@ export function VirtualPatientSimulation({ onBack }: Props) {
       <p className="simulation-examiner-note">{scenario.examinerNote}</p>
       {saveState==='saving' ? <ProcessingIndicator label="Saving simulation session" detail="Saving the fictional interview and formative feedback to your private account."/> : null}
       {saveMessage ? <p className={saveState==='error'?'auth-error':'auth-banner'} role="status">{saveMessage}</p> : null}
-      {saveState==='error' ? <button type="button" className="btn btn-secondary btn-small" onClick={()=>void saveFinishedSession()} disabled={saveState==='saving'}><Save size={14}/> Retry saving</button> : null}
+      {saveState==='error' ? <button type="button" className="btn btn-secondary btn-small" onClick={()=>void saveFinishedSession()}><Save size={14}/> Retry saving</button> : null}
       <button className="btn btn-primary btn-small" type="button" onClick={()=>reset()}><RotateCcw size={14}/> Start again</button>
     </section> : null}
     <p className="module-note"><ShieldAlert size={15}/> Fictional teaching exercise only. It does not provide clinical clearance, a diagnosis or treatment instructions. Confirm real clinical decisions with a qualified supervisor.</p>
