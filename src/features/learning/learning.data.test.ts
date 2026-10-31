@@ -6,6 +6,7 @@ describe('offline clinical learning content', () => {
     expect(findOfflineGuide('jaundice evaluation')?.id).toBe('jaundice-assessment');
     expect(findOfflineGuide('Suspected UTI in a child')?.id).toBe('uti-child-assessment');
     expect(findOfflineGuide('acute abdominal pain')?.id).toBe('acute-abdominal-pain');
+    expect(findOfflineGuide('appendicitis')?.id).toBe('appendicitis-assessment');
   });
 
   it('includes secure references and valid answer indices in all guides', () => {
