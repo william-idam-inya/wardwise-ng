@@ -1,135 +1,123 @@
 # Supabase setup for WardWise NG
 
-This guide applies only to WardWise NG. Keep it separate from the existing ClinClerk NG project.
+This guide applies only to WardWise NG. The separate ClinClerk NG project is unchanged and must never be reused, reset or deleted for this app.
 
-## 1. Create the dedicated project
+## 1. Dedicated project — created
 
-The connected Supabase account currently exposes one organisation: williamidaminya@gmail.com's Org. It currently contains clinclerk-ng only. Create a separate project named wardwise-ng in that organisation after reviewing the quote shown by Supabase. Do not select or change the existing ClinClerk project.
+The separate project is active and healthy:
 
-Choose a region appropriate for the expected users and institutional data-governance requirements. The app should be used with synthetic or properly de-identified study cases only until privacy and institutional approvals are in place.
+- Project: `wardwise-ng`
+- Project ref: `ooutidbssimzvvgkinek`
+- Region: Frankfurt (`eu-central-1`)
+- Project URL: `https://ooutidbssimzvvgkinek.supabase.co`
+- Organisation: the existing personal organisation on the Free plan.
 
-## 2. Apply the initial schema
+The project was quoted at $0/month when created on 31 October 2026. Check the current Supabase billing page before enabling paid add-ons or changing plans. The project is distinct from `clinclerk-ng`.
 
-The repository contains the first migration:
+Use synthetic or properly de-identified study cases only until privacy and institutional approvals are in place.
 
-supabase/migrations/20261030000000_create_profiles.sql
+## 2. Database migrations — applied
 
-After creating the new project, install the Supabase CLI and verify its version. From the repository root:
+The following migrations have been applied to the WardWise project:
 
-```bash
-supabase --version
-supabase link --project-ref YOUR_WARDWISE_PROJECT_REF
-supabase db push
-```
+1. `20261030000000_create_profiles.sql`
+2. `20261030010000_create_clinical_cases.sql`
+3. `20261031010000_create_simulation_bookmarks_audit.sql`
+4. `20261031101500_revoke_service_role_from_profiles.sql`
 
-Review the migration before applying it. It creates only public.profiles; it does not touch other projects or tables.
+The six public tables now present are:
 
-The migration:
-- stores the profile row under the authenticated user's ID;
-- enables row-level security;
-- explicitly grants select, insert, update, and delete to authenticated only;
-- uses separate owner policies for all four operations;
-- revokes browser-role access from anon;
-- adds a database-controlled updated_at trigger.
+- `profiles`
+- `clinical_cases`
+- `clerking_sessions`
+- `simulation_sessions`
+- `learning_bookmarks`
+- `audit_events`
 
-Do not manually apply this migration to clinclerk-ng.
+RLS is enabled on all six tables. Owner-specific policies exist for user-managed records. Audit events are readable by their owner and do not have a browser insert/update/delete policy. The profile table's `service_role` table grant was explicitly revoked; the browser uses the authenticated role and owner-specific RLS.
 
-## 3. Data API exposure requirement (effective 30 October 2026)
+The database security advisor reported no security lints after setup. Its performance advisor reported unused indexes on the new, empty tables; that is expected before real query activity and is not evidence of an access-control failure.
 
-Supabase no longer automatically grants Data API access to newly-created public tables. The migrations therefore contain explicit least-privilege grants for the profile, clinical-case and clerking-session tables. A missing grant causes a 42501 permission denied for table response before RLS runs.
+## 3. Data API exposure and grants
 
-Do not fix a permission error by granting everything to anon. Check the actual request role and required operation, then update the migration only if the app's access model requires it.
+New public tables may require explicit Data API grants depending on the project's Data API settings. The migrations grant only the operations the browser features need and pair those grants with RLS. A missing grant can cause a permission-denied response before RLS runs.
 
-## 4. Configure Auth URLs and email confirmation
+Do not fix a permission error by granting everything to `anon`. Check the actual request role and operation, and preserve owner-based policies. Never expose a service-role or secret key in the browser.
 
-In the WardWise project's Authentication URL configuration:
-- Set the local Site URL to http://localhost:5173.
-- Add http://localhost:5173/** to redirect URLs.
-- Add the exact Cloudflare preview and production URLs when those environments are created. Avoid broad wildcards for production.
-- Keep email confirmation enabled for real user registration unless there is a deliberate, documented reason to change it.
-- Test the confirmation and password-recovery emails end-to-end.
+## 4. Configure Auth URLs and email confirmation — still required
 
-The UI supports email/password registration, sign-in, password-reset email and password recovery. The user profile is completed after the first successful sign-in.
+Open the [WardWise Auth URL configuration](https://supabase.com/dashboard/project/ooutidbssimzvvgkinek/auth/url-configuration).
 
-## 5. Add the public browser configuration
+Set:
 
-Copy .env.example to .env.local and set:
+- Site URL: `https://wardwise-ng.pages.dev`
+- Redirect URL: `https://wardwise-ng.pages.dev/**`
+- Local development redirect: `http://localhost:5173/**`
 
-```dotenv
-VITE_SUPABASE_URL=https://YOUR_WARDWISE_PROJECT_REF.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_PUBLIC_KEY
-```
+When a Cloudflare branch-preview URL is available, add its exact origin/path as another redirect. Do not use a broad wildcard for production. Keep email confirmation enabled for real user registration unless there is a deliberate, documented reason to change it.
 
-A legacy public anon key can be used only if the project does not have a publishable key. Never put a service-role key, secret key, database password or Gemini key in .env.local or any VITE_ variable.
+The UI supports email/password registration, sign-in, password-reset email and password recovery. Complete end-to-end email tests before production use.
 
-## 6. Verify profile privacy
+## 5. Browser configuration
 
-After the migration has been applied:
+Cloudflare Pages has been connected to the public GitHub repository `william-idam-inya/wardwise-ng`. These public browser values are configured for preview and production builds:
+
+- `VITE_SUPABASE_URL`: `https://ooutidbssimzvvgkinek.supabase.co`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`: configured in Cloudflare Pages as a public publishable key.
+
+For local development, copy `.env.example` to `.env.local` and use the same two values. A publishable key is designed to be exposed in browser code when RLS is correctly enabled. Never put a service-role key, Supabase secret key, database password or Gemini API key in `.env.local` or a `VITE_` variable.
+
+## 6. Verify profile privacy with two accounts — not yet completed
+
+The database policies have been inspected, but account-to-account behaviour has not yet been verified. After Auth URLs are configured:
+
 1. Create test account A and complete its profile.
 2. Create test account B and complete its profile.
 3. As A, verify A can select and update A's profile.
-4. As A, attempt a direct query for B's profile ID; it must return no row.
+4. As A, query B's profile ID directly; it must return no row.
 5. As A, attempt to insert or update a profile row using B's ID; it must be rejected.
 6. Repeat the reverse checks as B.
 7. With no session, confirm the profile table cannot be read or changed.
 8. Check Supabase security advisors and database policy results.
 
-Do not mark user-data isolation as verified until these tests pass against the actual WardWise project.
+Extend the tests to cover cases, clerking sessions, simulation sessions and bookmarks. Account A must not read, update or delete account B's records. Do not mark user-data isolation as verified until these tests pass.
 
-## 7. Known current boundary
+## 7. Clinical cases and clerking sessions
 
-No WardWise Supabase project has been created or migrated yet. The existing clinclerk-ng project is intentionally untouched. Once a separate project exists, configure its URL/key locally, apply the migration, then verify email registration, sign-in, profile save/edit and two-user RLS isolation before enabling private case storage.
+The case migration creates:
 
-## 8. Create private clinical cases and clerking sessions
-
-The second migration is:
-
-`supabase/migrations/20261030010000_create_clinical_cases.sql`
-
-Apply it after the profile migration, in filename order. It creates:
 - `clinical_cases`: owner, non-identifying label, specialty, setting, draft/archive status, synthetic/de-identified category, structured JSON and formatted note.
 - `clerking_sessions`: owner-bound current stage and answers, linked to `clinical_cases` by a composite foreign key on `(case_id, user_id)`.
 
-Both tables have explicit authenticated grants and separate owner-only RLS policies for select, insert, update and delete. The composite foreign key prevents a session from being attached to another user's case. Delete cascades from a case to its session. The browser does not receive service-role privileges.
+The composite foreign key prevents a session from being attached to another user's case. Deleting a case cascades to its session. The app saves the case row and session row as two API writes; if the second write fails after the case row succeeds, the UI reports partial save and retains the case ID so the learner can retry.
 
-After both migrations, test with two authenticated accounts:
-1. Create a case and a clerking session as account A.
-2. Reopen and edit the case as A; confirm the stage and all answers are restored.
-3. As B, try to read, update and delete A's case ID and session; no operation may expose or alter A's rows.
-4. Archive a case as A, then delete it and verify its session is removed.
-5. Confirm an anonymous request cannot read or change either table.
-6. Confirm the case list is scoped to the current user and no identifiers are entered.
+Test with two authenticated accounts: create/reopen/edit as A; attempt read/update/delete as B; archive and delete a case; confirm its session is removed; and confirm anonymous users cannot access rows. A successful save is not clinical validation or supervisor sign-off.
 
-The app saves the case row and the session row as two API writes. If the second write fails after the case row succeeds, the UI reports a partial save and retains the case ID so the user can retry the session save. A successful database save is not clinical validation or supervisor sign-off.
+## 8. Simulation sessions, bookmarks and audit events
 
-Exports and automatic Gemini interpretation are not part of this persistence increment. The app must not send the structured case to an AI service until the server-side authenticated Gemini function is implemented and the learner explicitly requests that operation.
+The third migration adds:
 
+- `simulation_sessions`: owner-bound scenario ID, bounded transcript JSON, assessment JSON, optional score and timestamps. Leave score null until the rubric is independently reviewed.
+- `learning_bookmarks`: owner-bound stable topic/guide identifiers.
+- `audit_events`: minimal metadata-only events; never store histories, transcripts, notes, patient identifiers or secrets.
 
-## 9. Privacy and clinical-safety notice
+The browser can read only its own audit events and cannot insert/update/delete them. Any future audit writer must be server-side and must store metadata only.
 
-The in-app development notice is implemented at `src/features/privacy/PrivacyNotice.tsx`. It explains the planned categories of student profile data, case/session content, owner-based access controls and the stage-specific Gemini request flow. It explicitly states that the WardWise Supabase project has not yet been created, RLS isolation has not been tested with two accounts, and live data is not ready for clinical use.
+## 9. Gemini function status
 
-The notice also states:
+The authenticated `clinical-assistant` Supabase Edge Function is deployed with JWT verification enabled. Its URL is:
+
+`https://ooutidbssimzvvgkinek.supabase.co/functions/v1/clinical-assistant`
+
+The function still needs the private `GEMINI_API_KEY` and `APP_ALLOWED_ORIGINS` secrets before it can answer AI requests. See `docs/gemini-setup.md`. Do not send API keys through chat or commit them to Git.
+
+## 10. Privacy and clinical-safety boundaries
+
+The in-app notice explains the current database setup and remaining release gates. It also states:
+
 - Do not enter patient names, hospital identifiers, contact details, exact dates of birth, identifiable images or other patient identifiers.
-- `store: false` is not a guarantee of zero provider-side processing or retention; review the provider's applicable terms before enabling AI processing.
+- `store: false` is not a guarantee of zero provider-side processing or retention; review Google's applicable terms before enabling AI processing.
 - Account/profile deletion, automatic retention controls and a dedicated in-app content-report receiver are not implemented.
-- The app is not approved for identifiable patient information and the notice is not a final legal privacy policy or a claim of compliance with the Nigeria Data Protection Act.
+- WardWise is not approved for identifiable patient information. The notice is not a final legal privacy policy or a claim of compliance with the Nigeria Data Protection Act.
 
-The report form only prepares and copies a draft. It does not submit a report to WardWise. Configure an approved privacy contact and a real issue-reporting destination before production. Obtain appropriate Nigerian privacy/legal review and institutional approval before any patient-related data processing.
-
-
-## 10. Simulation sessions, bookmarks and audit events
-
-The third migration is:
-
-`supabase/migrations/20261031010000_create_simulation_bookmarks_audit.sql`
-
-Apply it after the profile and clinical-case migrations. It adds:
-
-- `simulation_sessions`: owner-bound scenario ID, bounded transcript JSON, assessment JSON, optional score and timestamps. The optional score should remain null until the relevant simulation rubric has been independently reviewed.
-- `learning_bookmarks`: owner-bound stable topic/guide identifiers with one bookmark per topic per user.
-- `audit_events`: minimal metadata-only event records. The browser can read only its own events; it has no direct insert/update/delete policy. A future server-side writer must create events without storing narratives, transcripts, notes, identifiers or secrets.
-
-The bookmark service at `src/features/learning/bookmark.service.ts` uses the signed-in Supabase user and the owner-specific policy. The Clinical Tutor does not write browser-only bookmark copies when the database is unavailable; it reports that the database/migration is required.
-
-After applying all migrations to the separate WardWise project, extend the two-account isolation test to cover simulation sessions and bookmarks. Verify account A cannot read/update/delete account B's simulation or bookmark rows. Verify anonymous users cannot access any of these tables. Audit-event insertion must be tested only through an approved server-side writer once that feature is implemented.
+Obtain appropriate Nigerian privacy/legal review and institutional approval before any patient-related data processing.
