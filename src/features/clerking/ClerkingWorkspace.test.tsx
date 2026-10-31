@@ -62,6 +62,15 @@ describe('guided clerking workspace', () => {
     expect(screen.getByText(/ai-generated educational prompt/i)).toBeInTheDocument();
   });
 
+  it('offers a separate print / PDF action for the reviewed note', () => {
+    const printSpy = vi.spyOn(window, 'print').mockImplementation(() => undefined);
+    renderClerking();
+    fireEvent.click(screen.getAllByRole('button', { name: /review note/i })[0]);
+    fireEvent.click(screen.getByRole('button', { name: /print \/ save pdf/i }));
+    expect(printSpy).toHaveBeenCalledTimes(1);
+    printSpy.mockRestore();
+  });
+
   it('shows the generated note preview and review action', () => {
     renderClerking();
     fireEvent.click(screen.getAllByRole('button', { name: /review note/i })[0]);
